@@ -1,0 +1,99 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>iDownload</title>
+    </head>
+<body>
+
+<style>
+body{font-size:18px;line-height:26px;padding:0px 0 0 30px;font-family:"Helvetica";background:#E8E8E8;margin:0;}
+h2{color:#F1C40F;text-shadow:1px 1px 5px rgba(0,30,95,1);overflow: hidden;}
+.logo{margin-right:10px;margin-top:-2px;display:inline-block;vertical-align: middle;float:left;cursor:pointer;}
+.loading{display:inline-block;position: relative;top:8px;margin-left:20px;display:none;float:left;}
+h2 .title{float:left;vertical-align: middle;margin-top:10px;margin-right:15px;cursor:pointer;}
+h2 .btn{float:left;vertical-align: middle;margin:10px 0 0px 20px;}
+
+.container{width:400px;}
+.btn{display:inline-block;background-color: #ededed;vertical-align: middle;text-shadow:none;
+border: 1px solid rgba(0, 0, 0, 0.25);
+color: #444;font: inherit;margin: 0 1px 0 0;font-size:12px;text-decoration: none;padding:0 8px;min-width:45px;text-align: center;}
+.btn:hover{background-color:#f0f0f0;border-color: rgba(0, 0, 0, 0.3);
+color: black;}
+.btnDisabled,.btnDisabled:hover{cursor:default;color:#999;background-image: -webkit-linear-gradient(#ededed, #ededed 38%, #dedede);box-shadow:none;border: 1px solid rgba(0, 0, 0, 0.25);}
+h2 .btnStop{display:none;margin-left:4px;}
+.btnMode{background-image:none;background-color:#D7B715;color:#001B61;}
+.btnMode:hover{background-image: -webkit-linear-gradient(#D3AD52, #D3AD52 38%, #D3AD52);}
+
+.config{background:rgba(255, 255, 255, 0.55);padding:1px 0 1px 0;color:#999;margin-bottom:10px;width:270px;display:;}
+.config h3{font-size:14px;margin:10px 0 0 10px;}
+.config ul{padding:0px;margin:0;}
+.config li{list-style:none;margin:0px;font-size:12px;line-height: 26px;overflow: hidden;}
+.config input.inputText{width:26px;text-align: center;margin-right: 6px;background:#fff;border: 1px solid rgba(0, 0, 0, 0.25);border-radius: 2px;;color:#333;}
+.config input.inputCheckbox{vertical-align: middle;margin-top:3px;}
+.config input.inputRadio{vertical-align: middle;margin-top:0px;}
+.config .name{display:block;text-align: right;margin-right:10px;width:120px;float:left;}
+.config .ct{display:block;float:left;}
+.config .ct label{display:block;}
+
+.downloadStatus{background:rgba(255, 255, 255, 0.55);padding:1px 10px 1px 10px;color:#999;margin-bottom:10px;width:500px;
+position:absolute;top:92px;left:330px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:50px;display:none;}
+
+.config-help{background:rgba(255, 255, 255, 0.95);padding:10px 10px 10px 10px;color:#999;margin-bottom:10px;width:500px;
+position:absolute;top:92px;left:330px;font-size:12px;line-height: 26px;font-family:"Helvetica";min-height:120px;display:none;}
+
+
+/* Loading Circle */
+.ball {display:inline-block;
+    background-color: rgba(0,0,0,0);
+    border:5px solid rgba(238,202,145,0.9);
+    opacity:.9;
+    border-top:5px solid rgba(0,0,0,0);
+    border-left:5px solid rgba(0,0,0,0);
+    border-radius:20px;
+    box-shadow: 0 0 16px #CA9B53;
+    width:20px;
+    height:20px;
+    margin:0 auto;
+    position:relative;
+    -moz-animation:spin .5s infinite linear;
+    -webkit-animation:spin .5s infinite linear;
+}
+
+.ball1 {display:inline-block;
+    background-color: rgba(0,0,0,0);
+    border:5px solid rgba(238,202,145,0.9);
+    opacity:.9;
+    border-top:5px solid rgba(0,0,0,0);
+    border-left:5px solid rgba(0,0,0,0);
+    border-radius:12px;
+    box-shadow: 0 0 13px #CA9B53; 
+    width:12px;
+    height:12px;
+    margin:0 auto;
+    position:absolute;
+    top:5px;
+    left:4px;
+    -moz-animation:spinoff .5s infinite linear;
+    -webkit-animation:spinoff .5s infinite linear;
+}
+
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform:rotate(0deg); }
+    100% { -webkit-transform:rotate(360deg); }
+}
+@-webkit-keyframes spinoff {
+    0% { -webkit-transform:rotate(0deg); }
+    100% { -webkit-transform:rotate(-360deg); }
+}
+</style>
+
+<iframe src="" id="iframe"></iframe>
+</body>
+
+<script type="text/javascript" src="zepto.min.js"></script>
+<script type="text/javascript" src="background.js"></script>
+
+
+</htmlD
