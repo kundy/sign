@@ -1,8 +1,8 @@
 /*
  * Copy Right: Tencent ISUX
- * Comments: web下载插件
+ * Comments: 自动抢筹码
  * Author: kundy
- * Date: 2014-12-24
+ * Date: 2016-04-10
  */
 
 
@@ -11,292 +11,258 @@ const tab_log = function(json_args) {
   console[args[0]].apply(console, Array.prototype.slice.call(args, 1));
 }
 
+var ENV = "DEBUG";
+var PLATFORM_STATUS = {
+    JD:{
+        name:"",
+        auth:0,//是否登录
+        today:0,//今天是否抢
+        num:0,//当前筹码数量
+        total:0//领取的累积数量
+    },
+    ETAO:{
+        name:"",
+        auth:0,//是否登录
+        today:0,//今天是否抢
+        num:0,//当前筹码数量
+        total:0//领取的累积数量
+    }
+};
 
-
-
-
-var iframe = $("#iframe")[0];
-iframe.onload = iframeLoad;
+var IFRAME = $("#iframe")[0];
 
 $(document).ready(function(){
-    
-    setTimeout(init,1000);
-    
+    dataUpdate();
+    setTimeout(init,200);
 });
 
 
 function init(){
-    iframe.src="http://pingce.jd.com/funding/usercenter.action";
+    console.log("init");
+    TASK.init();
+    TASK.TASK_INTERVAL = 24 * 3600 * 1000 / 10; //一天循环10次
+    task_reg();
+    TASK.start();
 
+}
+
+//注册任务
+function task_reg(){
+    TASK.reg(TASK_JD);
+    TASK.reg(TASK_ETAO);
 }
 
 
 
 
-
-
-function iframeLoad(){
-    console.log("iframeLoad");
-    console.log( iframe.contentWindow );
-    console.log( iframe.contentWindow.document.querySelector(".chouma") );
+//JD任务，获取众筹的筹码，用于体验产品。
+function TASK_JD(fun){
+    TASK_JD.end_cb = fun;
+    TASK_JD.step_check_login();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var taskFlag = 0;
-
-//消息处理 start
-chrome.extension.onConnect.addListener(function (port) {
-    // console.log("onConnect",port);
-    var extensionListener = function (message, sender, sendResponse) {
-    	if(message.method && message.tabId){
-    		if (message.method == 'sendToConsole'){
-                // return;
-    			//输出到background的调试窗口
-    			console.log( unescape(message.args) );
-    			//输出到当前已选择的tab的窗口
-    			chrome.tabs.executeScript(message.tabId, {
-    			    code: "("+ tab_log + ")('" + message.args + "');",
-    			});
-		    }
-        	else if(message.method=="taskStart"){
-                if(taskFlag)
-                    port.postMessage({method:"taskStart",tabId:message.tabId,content:1});
-                else{
-                    port.postMessage({method:"taskStart",tabId:message.tabId,content:0});
-                    taskFlag = 1;
-                }
-            }
-            else if(message.method=="taskFinish"){
-                taskFlag = 0;
-                port.postMessage({method:"taskFinish",tabId:message.tabId});
-            }
-            else if(message.method=="getSelectedTab"){
-        		chrome.tabs.get(message.content*1,function(tab) {
-    				port.postMessage({method:"getSelectedTab",tabId:message.tabId,url:tab.url});
-    			});
-        		
-        	}
-        	else if(message.method=="checkTabStatus"){
-        		port.postMessage({method:"checkTabStatus",tabId:message.tabId,content:tabStatus});
-        	}
-        	else if(message.method=="tabStatusInit"){
-        		tabStatusInit();
-        	}
-        	else if(message.method=="reloadTab"){
-        		reloadTab();
-        	}
-        	else if(message.method=="downloadFilelist"){
-        		Download.init(message.content,message.timeout);
-        	}
-        	else if(message.method=="checkDownloadStatus"){
-        		var fileDownloadFinish = 0;
-    	        var fileDownloadFail = 0;
-    	        for(var i=0;i<filelist.length;i++){
-    	            if(filelist[i][1]==1)fileDownloadFinish++;
-    	            if(filelist[i][1]==2)fileDownloadFail++;
-    	        }
-    	        
-                //下载完了所有文件，打印看一下
-    	        if(fileDownloadFinish+fileDownloadFail == filelist.length && 1){
-                    console.log(filelist);
-                    for(var i =0;i<filelist.length;i++){
-                        if(filelist[i][1]==1){
-                            console.log(filelist[i][0]);
-                            console.log(filelist[i][2]);
-                            // console.log(filelist[i][3].substring(0,30));
-                        }
-                    }
-                }
-        		port.postMessage({method:"checkDownloadStatus",tabId:message.tabId,success:fileDownloadFinish,fail:fileDownloadFail});
-        	}
-        	else if(message.method=="getFileData"){
-    	        var fileData = "";
-    	        if(filelist[message.content*1][1] == 1){
-    	        	fileData = filelist[message.content*1][3];
-    	        }
-        		port.postMessage({method:"getFileData",
-                                    tabId:message.tabId,
-    				    			i:message.content,
-                                    status:filelist[message.content*1][1],
-    				    			size:filelist[message.content*1][2],
-    				    			data:fileData});
-        	}
+//检查登录
+TASK_JD.step_check_login=function(){
+    console.log("【TASK_JD.step_check_login】")
+     //先检查登录态是否正常
+    checkUrlredirect("http://home.jd.com/",function(t){
+        if(t==1){
+            console.log("JD login ok");
+            PLATFORM_STATUS.JD.auth = 1;
+            TASK_JD.open_usercenter_action();
         }
-	}
-
-
-
-    chrome.extension.onMessage.addListener(extensionListener);
-    port.onDisconnect.addListener(function(port) {
-        // console.log("onDisconnect",port);
-        taskFlag = 0;
-        chrome.extension.onMessage.removeListener(extensionListener);
-    });
-});
-
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    return true;
-});
-
-//消息处理 end
-
-
-
-//重写webRequest的header字段
-//Cache-Control Pragma
-// chrome.webRequest.onBeforeSendHeaders.addListener(
-//     function(details) {
-//     	    // console.log(details);
-//             var exists = false;
-//             // details.requestHeaders.push({name:"X-Requested-With",value:"XMLHttpRequest"})
-//             details.requestHeaders.push({name:"Cache-Control",value:"no-cache"})
-//             details.requestHeaders.push({name:"Pragma",value:"no-cache"})
-
-//             // for (var i = 0; i < details.requestHeaders.length; ++i) {
-//             //     if (details.requestHeaders[i].name === 'Referer') {
-//             //         exists = true;
-//             //         details.requestHeaders[i].value = 'http://2014.zhihu.com';
-//             //         break;
-//             //     }
-//             // }
-//             // if (!exists) {
-//             //  details.requestHeaders.push({ name: 'Referer', value: 'http://2014.zhihu.com'});
-//             // }
-
-//             return { requestHeaders: details.requestHeaders };
-//     },
-//     {urls: ["<all_urls>"]},
-//     ["blocking", "requestHeaders"]
-// );
-
-var selectedTabId = 0;
-var selectedTabUrl="";
-var filelist;
-var tabStatus = 0;//tab状态 0:初始 1:触发刷新 2:刷新完成
-
-
-//刷新当前页面
-function reloadTab() {
-	tabStatus = 1;
-	chrome.tabs.getSelected(null, function(tab) {
-              chrome.tabs.reload(tab.id, {bypassCache: true}, function() {
-  		});
-        });
+        else{
+            console.log("JD login fail");
+            TASK_JD.finish();
+        }
+    })
+}
+//打开用户个人中心页
+TASK_JD.open_usercenter_action=function(){
+    console.log("【TASK_JD.open_usercenter_action】")
+    IFRAME.src="http://pingce.jd.com/funding/usercenter.action";
 }
 
-
-//标签页初始化，tab刷新状态触发tabStatus变化
-function tabStatusInit(){
-	tabStatus = 0;
-
-	chrome.tabs.getSelected(null, function(tab) {
-	    tabId=tab.id;
-	    // console.log("tabs getSelected tabId:"+tabId);
-	    chrome.tabs.onUpdated.addListener(function(updateTabId, changeInfo, tab) {
-
-	        if(updateTabId != tabId)return;
-	        // console.log("tabs onUpdated tabId:"+tabId);
-	        if (changeInfo.status === "complete" && tab.status === "complete") {
-	            setTimeout(function() {
-	            	tabStatus = 2;
-	            	// console.log("tabLoadingComplete");
-	            	// bgSendRequest("tabLoadingComplete","")
-	                // if(downloadStatus=enumStatus.doing)Download.ready();
-	            }, 1000);
-	        }
-	    });
-	});
+//任务结束
+TASK_JD.finish=function(){
+    console.log("【TASK_JD.finish】")
+    TASK_JD.end_cb();
 }
 
 
 
- // BEGIN: UTILITY FUNCTIONS
-var Download =function(){ }
+//一淘 淘金币任务
+function TASK_ETAO(fun){
+    TASK_ETAO.end_cb = fun;
+    TASK_ETAO.step_check_login();
+}
+//检查登录
+TASK_ETAO.step_check_login=function(){
+    console.log("【TASK_ETAO.step_check_login】")
+     //先检查登录态是否正常
+    IFRAME.src="http://www.etao.com/";
+}
 
-Download.init=function(list,timeout)
-{
-    filelist = [];//0:url 1:是否已下载 2:下载的文件大小 3:文件base64数据
-	filelist = JSON.parse(list);
+//任务结束
+TASK_ETAO.finish=function(){
+    console.log("【TASK_JD.finish】")
+    TASK_JD.end_cb();
+}
 
-    if(filelist.length==0){
-        return;//filelist为空时直接退出
+
+//处理消息
+function handle_msg(msg){
+    if(msg.type == "JD"){
+        if(msg.name == "chouma_num"){
+            PLATFORM_STATUS.JD.num = msg.data;
+        }
+        else if(msg.name == "chouma_click"){
+            PLATFORM_STATUS.JD.today = 1;
+            TASK_JD.finish();
+        }
     }
 
-	for(var i=0;i<filelist.length;i++){
-		Download.start(i,timeout);
-	}
+    else if(msg.type == "ETAO"){
+        if(msg.name == "login"){
+            if(msg.data!=""){//未登录
+                PLATFORM_STATUS.ETAO.auth = 0;
+                TASK_ETAO.finish();
+            }
+            else{//已登录
+                PLATFORM_STATUS.ETAO.auth = 1;
+                PLATFORM_STATUS.ETAO.name = msg.data;
+            }
+            
+        }
+        else if(msg.name == "sign_click"){
+            PLATFORM_STATUS.JD.today++;
+            TASK_ETAO.finish();
+        }
+    }
+
 }
 
-Download.start=function(i,timeout)
+
+
+
+
+
+
+//接收消息 
+window.addEventListener('message',function(e){
+    var data =e.data;
+    try{
+        var msg = JSON.parse(data);
+        if(msg && msg.type){
+            handle_msg(msg);
+        }
+    }catch(error){
+        console.log("receive error message")
+    }
+},false);
+
+
+
+
+
+
+
+var extension_id = chrome.i18n.getMessage("@@extension_id");
+
+var replace_data
+var replaceBlockUrls = [];
+
+//刷新要监控的数据，以后从服务器上刷新
+function dataUpdate(){
+    replace_data=[
+        {
+            "name":"JD",
+            "url":"http://pingce.jd.com/js/jquery-1.11.2.min.js",
+            "target":"chrome-extension://"+extension_id+"/data/jd/jquery-1.11.2.min.js"
+        },
+         {
+            "name":"JD",
+            "url":"http://trade-z.jd.com/js/jquery.pagination/jquery.lazyload.js",
+            "target":"chrome-extension://"+extension_id+"/data/jd/jquery.lazyload.js"
+        },
+         {
+            "name":"JD",
+            "url":"http://uaction.aliyuncdn.com/js/ua.js",
+            "target":"chrome-extension://"+extension_id+"/data/taobao/ua.js"
+        }
+    ]
+
+    replaceBlockUrls=[];
+    for(var i=0;i<replace_data.length;i++){
+        replaceBlockUrls.push(replace_data[i]["url"])
+    }
+    //监控也同时刷新一下
+    requestListen();
+}
+
+
+
+
+//请求监控
+function requestListen(){
+    chrome.webRequest.onBeforeRequest.addListener(
+        function(details){
+            // console.log(details);
+            if(details.tabId<0){
+                for(var i=0;i<replace_data.length;i++){
+                    if(details.url == replace_data[i]["url"]){
+                        console.log(details.url)
+                        return {redirectUrl: replace_data[i]["target"]};
+                    }
+                }
+            }
+            return {redirectUrl: details.url};
+        },
+        {
+            urls: replaceBlockUrls
+        },
+        [
+            "blocking"
+        ]
+    );
+}
+
+
+
+//测试url是否跳转，主要用来验证是否登录成功
+function checkUrlredirect(url,cb)
 {
 
-    var blobURL = filelist[i][0];
     var xhr = new XMLHttpRequest();    
-    xhr.open("get", blobURL, true);
+    xhr.open("get", url, true);
     xhr.responseType = "blob";
-    xhr.timeout = timeout*1000;
+    xhr.timeout = 30*1000;
     // xhr.setRequestHeader("User-Agent","Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)");
 
-
     xhr.onload = function() {
+        console.log(xhr.status)
         if (xhr.status == 200 ) {
-            var blobFile = xhr.response;
-            if(blobFile.size>0){
-                // console.log("Download success i:"+ i +　" blobURL:" +blobURL);
-	            var reader = new FileReader();
-				reader.onload = function(event){
-					filelist[i][3] = event.target.result;
-                    filelist[i][1]=1;
-					filelist[i][2]=blobFile.size;
-				}; 
-				var source = reader.readAsDataURL(blobFile);
+            if(url == xhr.responseURL){
+                cb(1);
             }
             else{
-                // console.warn("Download.size:0 i:"+ i +　" blobURL:" +blobURL);
-                Download.fail(i);    
+                cb(0);
             }
         }
         else{
             // console.warn("Download.fail i:"+ i +　" blobURL:" +blobURL);
-            Download.fail(i);
+            // Download.fail(i);
         }
     }
     xhr.ontimeout  = function(event){
         // console.warn("Download.timeout i:"+ i +　" blobURL:" +blobURL);
-        Download.fail(i);
 　　}
     xhr.onerror = function(e) {
         // console.warn("Download.error i:"+ i +　" blobURL:" +blobURL);
-        Download.fail(i);
       };
     xhr.send();
 }
 
 
- //文件下载失败
-Download.fail=function(i){
-    filelist[i][1]=2;
-}
-
-
-//文件下载完成
-Download.finish=function(i){
-
-    filelist[i][1]=1;
-}
 
 
 

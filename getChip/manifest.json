@@ -1,6 +1,6 @@
 {
    "name": "赚筹码",
-   "default_locale": "en",
+   "default_locale": "zh_CN",
    "version":"1.0",
    "icons": {
       "19": "icons/logo_19.png",
@@ -18,7 +18,17 @@
     "description": "__MSG_description__",
     "manifest_version": 2,
 
+     "content_scripts": [
+        {
+            "matches": ["*://game.weixin.qq.com/*"],
+            "js": ["weixin-js-bridge-mockup.min.js"],
+            "run_at": "document_start",  
+            "all_frames": true   
+        }
+    ],
+
     "permissions": [ "webRequest","notifications","pageCapture","topSites","webRequestBlocking", "storage", "tabs", "webNavigation", "*://*/*" , "https://*/*" ],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "background": { "page": "background.html" }
     //http://trade-z.jd.com/funding/mychip.action
 }

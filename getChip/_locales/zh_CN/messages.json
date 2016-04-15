@@ -1,5 +1,5 @@
 {
-    "description": {"message": "监控页面引用的资源，自动下载并打包。"},
+    "description": {"message": "自动获取京东、淘宝的筹码"},
 
 
     "mode": {"message": "模式切换"},

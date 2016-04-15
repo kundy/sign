@@ -1,0 +1,12 @@
+[
+    {
+        "name":"JD",
+        "url":"http://pingce.jd.com/js/jquery-1.11.2.min.js",
+        "target":"https://raw.githubusercontent.com/kundy/getChip/master/getChip/data/jd/jquery-1.11.2.min.js"
+    },
+     {
+        "name":"JD",
+        "url":"http://trade-z.jd.com/js/jquery.pagination/jquery.lazyload.js",
+        "target":"https://raw.githubusercontent.com/kundy/getChip/master/getChip/data/jd/jquery.lazyload.js"
+    }
+]
