@@ -18,17 +18,23 @@
     "description": "__MSG_description__",
     "manifest_version": 2,
 
-     "content_scripts": [
+    "content_scripts": [
         {
-            "matches": ["*://game.weixin.qq.com/*"],
-            "js": ["weixin-js-bridge-mockup.min.js"],
-            "run_at": "document_start",  
+            "matches": ["*://*.jd.com/*","*://*.etao.com/*"],
+            "js": ["data/main.js"],
+            "run_at": "document_end",  
             "all_frames": true   
         }
     ],
 
-    "permissions": [ "webRequest","notifications","pageCapture","topSites","webRequestBlocking", "storage", "tabs", "webNavigation", "*://*/*" , "https://*/*" ],
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+     "web_accessible_resources": [
+        "data/weixin/weixin-js-bridge-mockup.min.js",
+        "test-iframe.html"
+     ],
+
+    "permissions": [ "webRequest","notifications","pageCapture","topSites","webRequestBlocking", "storage", "tabs", "webNavigation", "http://*/*" , "https://*/*" ],
+    // "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "background": { "page": "background.html" }
-    //http://trade-z.jd.com/funding/mychip.action
+
+    
 }

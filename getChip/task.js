@@ -8,6 +8,7 @@
 
 
 var TASK = function(){}
+var TASK_TIMEOUT;
 TASK.list = [];
 TASK.init=function()
 {
@@ -33,9 +34,17 @@ TASK.loop=function()
     }
 
     TASK.list[TASK.TASK_INDEX](function(){
+        clearTimeout(TASK_TIMEOUT);
         TASK.TASK_INDEX++;
         TASK.loop();
     });
+
+    //设置超时间
+    clearTimeout(TASK_TIMEOUT);
+    TASK_TIMEOUT = setTimeout(function(){
+        console.log("[task timeout]")
+        TASK.list[TASK.TASK_INDEX].end_cb();
+    },TASK.TASK_TIMEOUT)
 }
 
 //暂停任务
