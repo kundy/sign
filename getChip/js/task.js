@@ -6,7 +6,6 @@
  */
 
 
-
 var TASK = function(){}
 var TASK_TIMEOUT;
 TASK.list = [];
@@ -28,12 +27,12 @@ TASK.reg=function(fun)//注册任务
 TASK.loop=function()
 {
     if(!TASK.RUN_FLAG)return;
-    if(TASK.TASK_INDEX == TASK.list.length){//任务结束
+    if(TASK.TASK_INDEX == TASK.list.length){//所有任务结束
         TASK.TASK_INDEX=0;
         return;
     }
 
-    TASK.list[TASK.TASK_INDEX](function(){
+    TASK.list[TASK.TASK_INDEX](function(){//执行任务 
         clearTimeout(TASK_TIMEOUT);
         TASK.TASK_INDEX++;
         TASK.loop();
@@ -41,7 +40,7 @@ TASK.loop=function()
 
     //设置超时间
     clearTimeout(TASK_TIMEOUT);
-    TASK_TIMEOUT = setTimeout(function(){
+    TASK_TIMEOUT = setTimeout(function(){//任务超时
         console.log("[task timeout]")
         TASK.list[TASK.TASK_INDEX].end_cb();
     },TASK.TASK_TIMEOUT)
@@ -58,5 +57,4 @@ TASK.resume=function()
 {
     TASK.RUN_FLAG = 1;
 }
-
 

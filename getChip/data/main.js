@@ -3,7 +3,7 @@
 (function(){
 
 
-console.log("[getChip] START");
+console.log("[CONTENT-SCRIPT] START");
 
 
 
@@ -24,10 +24,10 @@ function insert_script(js){
 		script.type = "text/javascript"; 
 		script.src= chrome.extension.getURL(js); 
 		body.appendChild(script);
-		console.log("[getChip insert_script] DONE")
+		console.log("[CONTENT-SCRIPT insert_script] DONE")
 	}
 	else{
-		console.log("[getChip insert_script] FAIL")
+		console.log("[CONTENT-SCRIPT insert_script] FAIL")
 	}
 }
 

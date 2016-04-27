@@ -2,20 +2,61 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>iDownload</title>
+    <title>getChip</title>
     </head>
 
-<style>
-body{width:800px;min-height:252px;overflow:hidden;padding-top:15px;}
-</style>
 
+
+<link href="css/semantic.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
 
 <body>
+
+<div class="ui container">
+	
+	<div class="chip-list">
+		<!-- <div class="ui labeled button ">
+		    <div class="ui red button">
+		       	<i class="checkmark icon"></i>京东 - 京豆
+		    </div>
+		    <a class="ui basic red left pointing label">5</a>
+	    </div> -->
+
+	</div>
+
+
+
+
+
+
+	<div class="ui flowing popup bottom left transition hidden">
+		<div class="ui aligned grid">
+			<div class="column">
+			<h4 class="name">京东-京豆</h4>
+			<div class="remark">京豆可以直接用来支付商品，1京豆=0.01元</div>
+			<div class="id"><span class="title">帐号：</span><span id="id">kundy28</span></div>
+			<div class="num"><span class="title">数量：</span><span id="num">28</span></div>
+			<div class="status"><span class="title">状态：</span>
+				<div class="ui fitted toggle checkbox">
+			     	 <input type="checkbox" tabindex="0" class="hidden">
+			    </div>
+
+			</div>
+			
+		</div>
+	</div>
+
+
+</div>
+
+
 
 
 
 </body>
+<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="js/semantic.min.js"></script>
+<script type="text/javascript" src="js/popup.js"></script>
 
-<script type="text/javascript" src="zepto.min.js"></script>
-<!-- <script type="text/javascript" src="main.js"></script> -->
+
 </html>

@@ -57,10 +57,6 @@ function ETAO_sign(){
     
     location.href = url;
 
-    // var msg = {type:"ETAO",name:"sign_click",data:""};
-    // setTimeout(function(){
-    //     post_parent(msg);
-    // },3000)
 }
 
 
