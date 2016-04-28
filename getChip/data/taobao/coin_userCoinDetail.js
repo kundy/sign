@@ -1,14 +1,16 @@
 /*
  * Copy Right: tonytony.club
- * Comments: 适用于 http://trade-z.jd.com/funding/mychip.action
+ * Comments: 适用于http://www.etao.com/
  * Author: kundy
  * Date: 2016-04-21
  */
 
 
 
+
 var GET_CHIP_FLAG = 0;//防止重复加载引起多次运行
 (function(){
+
 
 
 if(GET_CHIP_FLAG==1)return;
@@ -20,29 +22,31 @@ setTimeout(init,500);
 
 
 function init(){
-	console.log("[usercenter.action.js start]");
-    var msg;
-    JD_mychip_action();
+    console.log("[coin_userCoinDetail.js start]");
+    ETAO_get_num()
 }
 
 
-function JD_mychip_action(){
-	//延时打开 抢筹码页面
-	$(".chouma_box a").attr("target","_self");
-	if($(".banner-container button.btn").length>0)
-		click_btn($(".banner-container button.btn")[0])
 
-	
-	setTimeout(function(){
-		//通知已点击
-		var msg = {type:"JD",name:"chouma_click",data:""};
-		post_parent(msg);
 
-		
-	},2000)
-	
-	
+
+function ETAO_get_num(){
+
+	//获取筹码数量
+	var num = 0;
+
+	if(document.querySelectorAll(".my-coin span").length>0)
+		num = document.querySelectorAll(".my-coin span")[0].innerText;
+
+	//通知父页面
+	var msg = {type:"ETAO",name:"coin_num",data:num};
+	post_parent(msg);
+
 }
+
+
+
+
 
 
 

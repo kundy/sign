@@ -2,18 +2,18 @@
 
 
 //初始定义
-var NAME='JD_JDOU';
+var NAME='VIP_QQ';
 if(!CHIP_DATA[NAME]){
     CHIP_DATA[NAME]={
-        name:"京东-京豆",
-        remark:"京豆可直接用于支付京东网站订单，100京豆 = ￥1.00 ",
-        remarkUrl:"http://help.jd.com/user/issue/167-330.html",
+        name:"QQ-积分",
+        remark:"QQ会员积分可以兑换游戏礼包、QQ公仔、数码奖品并进行抽奖等",
+        remarkUrl:"http://vip.qq.com/jf/earn.html",
         id:"",
-        idUrl:"http://home.jd.com/",
+        idUrl:"http://vip.qq.com/my/index.html",
         auth:-1,//是否登录
         today:0,//今天是否抢
         num:-1,//当前筹码数量
-        numUrl:"http://bean.jd.com/myJingBean/list",
+        numUrl:"http://vip.qq.com/jf/earn.html",
         total:0,//领取的累积数量
         status:1,
         task:{}
@@ -32,33 +32,16 @@ function task(fun){
         task.finish();
     }
     else{
-        task.step_check_login();
+        task.open_vip_jr_jd_com();
     }
 }
 
 
 
-//检查登录
-task.step_check_login=function(){
-    console.log("[task.step_check_login]")
-     //先检查登录态是否正常
-    checkUrlredirect("http://home.jd.com/",function(t){
-        if(t==1){
-            console.log("[TASK_JD_JDOU] login ok")
-            CHIP_DATA[NAME].auth = 1;
-            task.open_vip_jr_jd_com();
-        }
-        else{
-            console.log("[TASK_JD_JDOU] login fail")
-            CHIP_DATA[NAME].auth = 0;
-            task.finish();
-        }
-    })
-}
 //打开用户个人中心页
 task.open_vip_jr_jd_com=function(){
     console.log("[task.open_vip_jr_jd_com")
-    IFRAME.src="http://vip.jr.jd.com/";
+    IFRAME.src="http://vip.qq.com/jf/earn.html";
 }
 
 

@@ -23,16 +23,22 @@ setTimeout(init,500);
 
 function init(){
     console.log("[etao_getCreditForSrp.js start]");
-    ETAO_done()
+    ETAO_post_sign()
 }
 
 
 
 
 
-function ETAO_done(){
+function ETAO_post_sign(){
     var msg = {type:"ETAO",name:"sign_click",data:""};
     post_parent(msg);
+
+    ETAO_go_coin();
+}
+
+function ETAO_go_coin(){
+    location.href = "https://taojinbi.taobao.com/coin/userCoinDetail.htm";
 }
 
 
@@ -55,48 +61,6 @@ function post_parent(msg){
 
 
 })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

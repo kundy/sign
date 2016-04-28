@@ -28,9 +28,24 @@ function init(){
 
 
 function JD_usercenter_action(){
-	var chouma_num = $(".chouma_box a b").text();
 
-	//通知父页面筹码数量
+	//获取用户名
+	var user_name ="";
+    if(document.querySelectorAll("#loginbar .link-user").length>0){
+        user_name=document.querySelectorAll("#loginbar .link-user")[0].innerText;
+    }
+
+    var msg = {type:"JD",name:"user_name",data:""};
+    post_parent(msg);
+
+
+	//获取筹码数量
+	var chouma_num = 0;
+
+	if(document.querySelectorAll(".chouma_box a b ").length>0)
+		chouma_num = document.querySelectorAll(".chouma_box a b ")[0].innerText;
+
+	//通知父页面
 	var msg = {type:"JD",name:"chouma_num",data:chouma_num};
 	post_parent(msg);
 

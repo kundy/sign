@@ -30,7 +30,12 @@ function init(){
 
 //测试是否登录成功
 function ETAO_test_login(){
-    var login_info = document.querySelectorAll("#J_MyLogin a")[0].innerText
+    var login_info = ""
+    if(document.querySelectorAll("#J_MyLogin a").length>0)
+        login_info = document.querySelectorAll("#J_MyLogin a")[0].innerText;
+    
+
+    // console.log("login_info:"+login_info);
     if( login_info == "登录" ){
         var msg = {type:"ETAO",name:"login",data:""};
         post_parent(msg);

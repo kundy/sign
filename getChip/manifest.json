@@ -20,7 +20,7 @@
 
     "content_scripts": [
         {
-            "matches": ["*://*.jd.com/*","*://*.etao.com/*"],
+            "matches": ["*://*/*"],
             "js": ["data/main.js"],
             "run_at": "document_end",  
             "all_frames": true   

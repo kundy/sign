@@ -8,11 +8,11 @@ if(!CHIP_DATA[NAME]){
         remark:"京豆筹码可以用来体验最新商品",
         remarkUrl:"",
         id:"",
-        idUrl:"",
+        idUrl:"http://home.jd.com/",
         auth:-1,//是否登录
         today:0,//今天是否抢
         num:-1,//当前筹码数量
-        numUrl:"",
+        numUrl:"http://pingce.jd.com/funding/usercenter.action",
         total:0,//领取的累积数量
         status:1,
         task:{}
@@ -27,8 +27,15 @@ var IFRAME = $("#iframe")[0];
 function task(fun){
     console.log("[task start]****** name:"+NAME)
     task.end_cb = fun;
-    task.step_check_login();
+
+    if(CHIP_DATA[NAME].status == 0){
+        task.finish();
+    }
+    else{
+        task.step_check_login();
+    }
 }
+
 //检查登录
 task.step_check_login=function(){
     console.log("[task.step_check_login]")
@@ -42,7 +49,7 @@ task.step_check_login=function(){
         else{
             console.log("[TASK_JD_JDOU] login fail")
             CHIP_DATA[NAME].auth = 0;
-            CHIP_DATA[NAME].name = "";
+            CHIP_DATA[NAME].id = "";
             task.finish();
         }
     })

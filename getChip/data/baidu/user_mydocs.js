@@ -20,28 +20,23 @@ setTimeout(init,500);
 
 
 function init(){
-	console.log("[usercenter.action.js start]");
-    var msg;
-    JD_mychip_action();
+	console.log("[user_mydocs.js start]");
+    get_credit();
 }
 
 
-function JD_mychip_action(){
-	//延时打开 抢筹码页面
-	$(".chouma_box a").attr("target","_self");
-	if($(".banner-container button.btn").length>0)
-		click_btn($(".banner-container button.btn")[0])
 
-	
-	setTimeout(function(){
-		//通知已点击
-		var msg = {type:"JD",name:"chouma_click",data:""};
-		post_parent(msg);
 
-		
-	},2000)
-	
-	
+//获取积分数量
+function get_credit(){
+	var num = 0;
+
+	if(document.querySelectorAll(".right-block .wealth-number a").length>0)
+		num = document.querySelectorAll(".right-block .wealth-number a")[0].innerText;
+
+	//通知父页面
+	var msg = {type:"BAIDU_WENKU",name:"credit_num",data:num};
+	post_parent(msg);
 }
 
 

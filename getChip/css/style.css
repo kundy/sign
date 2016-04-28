@@ -55,8 +55,16 @@ body{width:420px;min-height:352px;overflow:hidden;padding-top:15px;}
     transition: color 0.6s ease, transform 0.2s ease;
 }
 
-.popup .remark{color:#999;font-size:12px;}
+.popup a{cursor:pointer;}
+.popup a:hover{text-decoration: none;}
+.popup .remark{color:#aaa;font-size:12px;display:block;cursor:pointer;line-height:14px;margin-top:5px;}
 .popup .id{margin-top:10px;}
 .popup span.title{display:inline-block;width:50px;text-align: left;}
-.popup .status{margin-top:10px;}
-.popup .checkbox{position: relative;top:6px;}
+.popup .checkbox{display:block;margin-top:20px;margin-left:60px;}
+
+
+.chip-task{position:absolute;bottom:0;left:10px;}
+.chip-task .sign-text .num{display:inline-block;margin:0 3px;color:#2185D0;font-size:14px;font-weight: bold;}
+.chip-task .sign-last{display:inline-block;margin-left:10px;}
+.chip-task .refresh{display:inline-block;margin-left:10px;}
+
