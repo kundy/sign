@@ -1,6 +1,6 @@
 /*
  * Copy Right: tonytony.club
- * Comments: 适用于 http://trade-z.jd.com/funding/mychip.action
+ * Comments: 适用于 http://wenku.baidu.com/
  * Author: kundy
  * Date: 2016-04-21
  */
@@ -32,8 +32,7 @@ function get_user_name(){
 	var msg;
     if(document.querySelectorAll("#userNameCon").length>0){
         user_name=document.querySelectorAll("#userNameCon")[0].innerText;
-
-		setTimeout(go_daily_page,500)
+	setTimeout(go_daily_page,500)
 
     }
     msg = {type:"BAIDU_WENKU",name:"user_name",data:user_name};

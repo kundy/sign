@@ -95,41 +95,43 @@ function pageRefresh(){
 	for(var item in CHIP_DATA){
 		//console.log(CHIP_DATA[item]);
 
-		//各平台数据
-		var themeColor = "black";//主题色设置，初始black
-		var iconStyle = "checkmark";//图标
+		if(CHIP_DATA[item].visable && CHIP_DATA[item].visable==1){
+			
+			var themeColor = "black";//主题色设置，初始black
+			var iconStyle = "checkmark";//图标
 
-		if(CHIP_DATA[item].status===0){//禁止运行
-			themeColor="grey"
-			iconStyle="coffee";
-		}
-		else if(CHIP_DATA[item].auth!=1){//未登录
-			themeColor="red"
-			iconStyle="warning sign";
-		}
-		else{
-			if(CHIP_DATA[item].today===0){//今天还未签到
-				themeColor="teal"
-				iconStyle="wait";
+			if(CHIP_DATA[item].status===0){//禁止运行
+				themeColor="grey"
+				iconStyle="coffee";
 			}
-			else{//今天已签到
-				themeColor="green"
-				iconStyle="checkmark";
+			else if(CHIP_DATA[item].auth!=1){//未登录
+				themeColor="red"
+				iconStyle="warning sign";
 			}
+			else{
+				if(CHIP_DATA[item].today===0){//今天还未签到
+					themeColor="teal"
+					iconStyle="wait";
+				}
+				else{//今天已签到
+					themeColor="green"
+					iconStyle="checkmark";
+				}
+			}
+
+
+			html+='<div class="ui labeled button item" data-item="'+item+'">';
+			html+='		<div class="ui '+themeColor+' button">';
+			html+='			<i class="'+iconStyle+' icon"></i>'+CHIP_DATA[item].name;
+			html+='		</div>';
+			html+='		<a class="ui basic '+themeColor+' left pointing label">';
+
+			if(CHIP_DATA[item].num==-1)html+="-";
+			else html+=CHIP_DATA[item].num;
+
+			html+='</a>';
+		    	html+='</div>';
 		}
-
-
-		html+='<div class="ui labeled button item" data-item="'+item+'">';
-		html+='		<div class="ui '+themeColor+' button">';
-		html+='			<i class="'+iconStyle+' icon"></i>'+CHIP_DATA[item].name;
-		html+='		</div>';
-		html+='		<a class="ui basic '+themeColor+' left pointing label">';
-
-		if(CHIP_DATA[item].num==-1)html+="-";
-		else html+=CHIP_DATA[item].num;
-
-		html+='</a>';
-	    html+='</div>';
 	}
 
 	$(".chip-list").html(html);
@@ -211,6 +213,7 @@ function msg_background(_cmd,_cb){
 
 //响应消息
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+	console.log(message);
     if(message == 'DATA_UPDATE'){
     	dataUpdate();
     }

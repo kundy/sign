@@ -7,14 +7,8 @@ console.log("[CONTENT-SCRIPT] START");
 
 
 
-var msg = {type:"HOOK",name:"url",data:location.href};
+var msg = {type:"SIGN_CONTENT_SCRIPT_RUN",name:"url",data:location.href};
 post_msg(msg);
-
-
-
-
-
-
 
 
 function insert_script(js){
@@ -22,7 +16,7 @@ function insert_script(js){
 		var body  = document.getElementsByTagName('body')[0]; 
 		var script= document.createElement("script"); 
 		script.type = "text/javascript"; 
-		script.src= chrome.extension.getURL(js); 
+		script.src= js; 
 		body.appendChild(script);
 		console.log("[CONTENT-SCRIPT insert_script] DONE")
 	}
@@ -34,7 +28,7 @@ function insert_script(js){
 
 //处理消息
 function handle_msg(msg){
-    if(msg.type == "INSERT"){
+    if(msg.type == "SIGN_INSERT_CONTENT"){
         if(msg.name == "script"){
             insert_script(msg.data)
         }

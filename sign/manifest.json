@@ -1,5 +1,5 @@
 {
-   "name": "赚筹码",
+   "name": "天天签到",
    "default_locale": "zh_CN",
    "version":"1.0",
    "icons": {
@@ -15,7 +15,7 @@
        "default_popup": "popup.html"
 
    },
-    "description": "__MSG_description__",
+    "description": "每天自动在各平台签到，获取淘金币、京豆、筹码、下载券等，积少成多实时掌控",
     "manifest_version": 2,
 
     "content_scripts": [
@@ -33,7 +33,7 @@
      ],
 
     "permissions": [ "webRequest","notifications","pageCapture","topSites","webRequestBlocking", "storage", "tabs", "webNavigation", "http://*/*" , "https://*/*" ],
-    // "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "content_security_policy": "script-src 'self' https://localhost; object-src 'self'",
     "background": { "page": "background.html" }
 
     

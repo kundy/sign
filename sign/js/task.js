@@ -29,10 +29,17 @@ TASK.start=function()
     TASK.RUN_FLAG = 1;
     setInterval(TASK.loop , TASK.TASK_INTERVAL);
 }
+
 TASK.reg=function(fun)//注册任务
 {
     TASK.list.push(fun);
 }
+
+TASK.clear=function()//清空任务
+{
+    TASK.list=[];
+}
+
 //循环任务
 TASK.loop=function()
 {

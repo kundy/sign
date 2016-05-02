@@ -20,29 +20,28 @@ setTimeout(init,500);
 
 
 function init(){
-	console.log("[task_browse_daily.js start]");
-    click_sign();
+	console.log("[usercenter.action.js start]");
+    var msg;
+    JD_mychip_action();
 }
 
 
+function JD_mychip_action(){
+	//延时打开 抢筹码页面
+	$(".chouma_box a").attr("target","_self");
+	if($(".banner-container button.btn").length>0)
+		click_btn($(".banner-container button.btn")[0])
 
-//点击签到
-function click_sign(){
+	
+	setTimeout(function(){
+		//通知已点击
+		var msg = {type:"JD",name:"chouma_click",data:""};
+		post_parent(msg);
 
-	if(document.querySelectorAll(".js-signin-btn").length>0){
-		click_btn(document.querySelectorAll(".js-signin-btn")[0])
-		var msg = {type:"BAIDU_WENKU",name:"sign_click",data:""};
-    	post_parent(msg);
-	}
-	setTimeout(go_credit,1500)
-}
-
-
-//获取积分数量
-function go_credit(){
-
-	location.href="http://wenku.baidu.com/user/mydocs";
-
+		
+	},2000)
+	
+	
 }
 
 
