@@ -1,0 +1,6 @@
+{
+  "name": "Sign",
+  "tagline": "",
+  "body": "### 介绍\r\n很多平台都可以每天进行签到，得到一些小福利，如获取京豆、淘金币、百度下载券等。\r\n解放双手，交给插件自动帮你签到吧。\r\n\r\n#效果图\r\n![alt 截图](https://raw.githubusercontent.com/kundy/sign/master/sample.png \"title 截图\")\r\n#开源\r\n本项目完全开源，如有任何疑问或者建议，欢迎反馈。\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
