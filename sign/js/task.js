@@ -30,7 +30,7 @@ TASK.start=function()
     TASK.TIME_START = Date.parse(new Date()); 
     TASK.TIME_END = 0;
     TASK.RUN_FLAG = 1;
-    //setInterval(TASK.loop , TASK.TASK_INTERVAL);
+    setInterval(TASK.loop , TASK.TASK_INTERVAL);
 }
 
 TASK.reg=function(fun)//注册任务
