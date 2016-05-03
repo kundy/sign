@@ -6,8 +6,10 @@
  */
 
 
+(function(){
+
 var TASK = function(){}
-var TASK_TIMEOUT;
+var TASK_TIMEOUT_ID;
 TASK.list = [];
 TASK.init=function(start_cb,end_cb)
 {
@@ -21,13 +23,14 @@ TASK.init=function(start_cb,end_cb)
 }
 TASK.start=function()
 {
+    console.log("TASK.start")
     if(TASK.RUN_FLAG)return;
     TASK.START_CB();
     TASK.loop();
     TASK.TIME_START = Date.parse(new Date()); 
     TASK.TIME_END = 0;
     TASK.RUN_FLAG = 1;
-    setInterval(TASK.loop , TASK.TASK_INTERVAL);
+    //setInterval(TASK.loop , TASK.TASK_INTERVAL);
 }
 
 TASK.reg=function(fun)//注册任务
@@ -44,22 +47,25 @@ TASK.clear=function()//清空任务
 TASK.loop=function()
 {
     if(TASK.TASK_INDEX == TASK.list.length){//所有任务结束
+        if(TASK_TIMEOUT_ID)clearTimeout(TASK_TIMEOUT_ID);
         TASK.finish();
-        return;
     }
+    else{
 
-    TASK.list[TASK.TASK_INDEX](function(){//执行任务 ，参数为回调
-        clearTimeout(TASK_TIMEOUT);
-        TASK.TASK_INDEX++;
-        TASK.loop();
-    });
+        TASK.list[TASK.TASK_INDEX](function(){//执行任务 ，参数为回调
+            setTimeout(function(){//此处注意要异步延迟执行,防止过早回调直接进入下一个任务
+                if(TASK_TIMEOUT_ID)clearTimeout(TASK_TIMEOUT_ID);
+                TASK.TASK_INDEX++;
+                TASK.loop();
+            },200)
+        });
 
-    //设置超时间
-    clearTimeout(TASK_TIMEOUT);
-    TASK_TIMEOUT = setTimeout(function(){//任务超时
-        console.log("[task timeout]")
-        TASK.list[TASK.TASK_INDEX].end_cb();
-    },TASK.TASK_TIMEOUT)
+        //设置超时间
+        if(TASK_TIMEOUT_ID)clearTimeout(TASK_TIMEOUT_ID);
+        TASK_TIMEOUT_ID = setTimeout(function(){//任务超时
+            TASK.list[TASK.TASK_INDEX].end_cb();
+        },TASK.TASK_TIMEOUT)
+    }
 }
 
 //所有任务完成
@@ -85,3 +91,12 @@ TASK.resume=function()
     TASK.RUN_FLAG = 1;
 }
 
+
+window.TASK = TASK;
+
+
+
+
+
+
+})();

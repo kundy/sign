@@ -10,7 +10,7 @@ console.log("[LOAD data.js] 2016041201 ");
 
 
 //任务列表
-if(TASK_LIST)TASK_LIST = ["JD_JDOU","ETAO","VIP_QQ"];
+if(TASK_LIST)TASK_LIST = ["XUNLEI_DAKA"];
 //if(TASK_LIST)TASK_LIST = ['JD_JDOU','JD_CHOUMA','ETAO',"VIP_QQ","BAIDU_WENKU"];
 
 

@@ -14,6 +14,7 @@ var SERVER_UPDATE_INTERVAL = 24 * 3600 * 1000 //从服务器上主动更新逻�
 var CHIP_DATA = {};//全局公用数据，需要存localstorage
 var TASK_DATA = {TIMES:0,TIME_START:0,TIME_END:0};//全局任务数据，需要存localstorage
 var SIGN_SERVER_PREFIX = "https://raw.githubusercontent.com/kundy/sign/master/sign/";
+var TASK_TIMEOUT = 10 * 1000 ; //单个任务超时时间，30秒
 
 //测试环境本地化
 if(ENV=="DEBUG")SIGN_SERVER_PREFIX = "https://localhost/GitHub/sign/";
@@ -137,7 +138,7 @@ function task_init(){
     TASK.clear();
     TASK.init(task_start_cb,task_finish_cb);
     TASK.TASK_INTERVAL = TASK_INTERVAL;
-    TASK.TASK_TIMEOUT = 30 * 1000 ; //任务超时时间，30秒
+    TASK.TASK_TIMEOUT = TASK_TIMEOUT;
     TASK.TIMES = TASK_DATA.TIMES;//任务执行次数
     TASK.TIME_START = TASK_DATA.TIME_START;//任务开始时间
     TASK.TIME_END = TASK_DATA.TIME_END;//任务结束时间
@@ -159,14 +160,14 @@ function task_reg(){
 
 
 //加载任务
-function task_load(src){
+function task_load(taskId){
     var body  = document.getElementsByTagName('body')[0]; 
     var script= document.createElement("script"); 
     script.type = "text/javascript"; 
     script.setAttribute("data-version",VERSION);   
-    script.src= SIGN_SERVER_PREFIX+"sign/data/"+VERSION+"/task/"+src+".js"; 
+    script.src= SIGN_SERVER_PREFIX+"sign/data/"+VERSION+"/task/"+taskId+".js"; 
     script.onload=function(){
-        TASK.reg(CHIP_DATA[src].task);
+        TASK.reg(CHIP_DATA[taskId].task);
         task_reg();
     }
     body.appendChild(script);
