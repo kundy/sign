@@ -2,18 +2,18 @@
 
 
 //初始定义
-var NAME='VIP_QQ';
+var NAME='LIANTONG';
 if(!CHIP_DATA[NAME]){
     CHIP_DATA[NAME]={
-        name:"QQ-积分",
-        remark:"QQ会员积分可以兑换游戏礼包、QQ公仔、数码奖品并进行抽奖等",
-        remarkUrl:"http://vip.qq.com/jf/earn.html",
+        name:"联通-签到",
+        remark:"每日签到获得金币，可以兑换奖品",
+        remarkUrl:"http://iservice.10010.com/e3/signIn/index.html",
         id:"",
-        idUrl:"http://vip.qq.com/my/index.html",
+        idUrl:"https://uac.10010.com/cust/userinfo/userInfoInit",
         auth:-1,//是否登录
         today:0,//今天是否抢
         num:-1,//当前筹码数量
-        numUrl:"http://vip.qq.com/jf/earn.html",
+        numUrl:"http://iservice.10010.com/e3/signIn/index.html",
         total:0,//领取的累积数量
         status:1,
         task:{}
@@ -23,6 +23,7 @@ if(!CHIP_DATA[NAME]){
 
 
 var IFRAME = $("#iframe")[0];    
+
 
 function task(fun){
     console.log("[task start]****** name:"+NAME)
@@ -40,9 +41,8 @@ function task(fun){
 //打开用户个人中心页
 task.open_index=function(){
     console.log("[task.open_index")
-    IFRAME.src="http://vip.qq.com/jf/earn.html";
+    IFRAME.src="http://iservice.10010.com/e3/signIn/index.html";
 }
-
 
 
 //任务结束

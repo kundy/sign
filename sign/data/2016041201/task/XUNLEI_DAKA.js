@@ -6,14 +6,14 @@ var NAME='XUNLEI_DAKA';
 if(!CHIP_DATA[NAME]){
     CHIP_DATA[NAME]={
         name:"迅雷-打卡",
-        remark:"每日签到领取1-3积分,可以用来兑换迅雷VIP、周边商品，200金豆=1元",
-        remarkUrl:"http://vip.qq.com/jf/earn.html",
+        remark:"每日签到打卡,可以用来兑换迅雷VIP、周边商品，200金豆=1元",
+        remarkUrl:"http://vip.xunlei.com/vip_service/mycenter/rule.html",
         id:"",
-        idUrl:"http://vip.qq.com/my/index.html",
+        idUrl:"http://dynamic.i.xunlei.com/user",
         auth:-1,//是否登录
         today:0,//今天是否抢
         num:-1,//当前筹码数量
-        numUrl:"http://vip.qq.com/jf/earn.html",
+        numUrl:"http://vip.xunlei.com/index.html",
         total:0,//领取的累积数量
         status:1,
         task:{}
@@ -23,8 +23,8 @@ if(!CHIP_DATA[NAME]){
 
 
 var IFRAME = $("#iframe")[0];    
-/*JD任务，签到获取京豆
-**********************************************/
+
+
 function task(fun){
     console.log("[task start]****** name:"+NAME)
     task.end_cb = fun;
@@ -32,22 +32,18 @@ function task(fun){
         task.finish();
     }
     else{
-        task.open_vip_jr_jd_com();
+        task.open_index();
     }
 }
 
 
 
 //打开用户个人中心页
-task.open_vip_jr_jd_com=function(){
-    console.log("[task.open_vip_jr_jd_com")
-    IFRAME.src="http://vip.qq.com/jf/earn.html";
+task.open_index=function(){
+    console.log("[task.open_index")
+    IFRAME.src="http://vip.xunlei.com/index.html";
 }
 
-
-task.call=function(data){
-
-}
 
 //任务结束
 task.finish=function(){

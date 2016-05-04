@@ -22,9 +22,9 @@ if(!CHIP_DATA[NAME]){
 
 
 
-var IFRAME = $("#iframe")[0];    
-/*JD任务，签到获取京豆
-**********************************************/
+var IFRAME = $("#iframe")[0];
+
+
 function task(fun){
     console.log("[task start]****** name:"+NAME)
     task.end_cb = fun;
@@ -32,21 +32,21 @@ function task(fun){
         task.finish();
     }
     else{
-        task.step_check_login();
+        task.check_login();
     }
 }
 
 
 
 //检查登录
-task.step_check_login=function(){
-    console.log("[task.step_check_login]")
+task.check_login=function(){
+    console.log("[task.check_login]")
      //先检查登录态是否正常
     checkUrlredirect("http://home.jd.com/",function(t){
         if(t==1){
             console.log("[TASK_JD_JDOU] login ok")
             CHIP_DATA[NAME].auth = 1;
-            task.open_vip_jr_jd_com();
+            task.open_index();
         }
         else{
             console.log("[TASK_JD_JDOU] login fail")
@@ -56,15 +56,12 @@ task.step_check_login=function(){
     })
 }
 //打开用户个人中心页
-task.open_vip_jr_jd_com=function(){
-    console.log("[task.open_vip_jr_jd_com")
+task.open_index=function(){
+    console.log("[task.open_index")
     IFRAME.src="http://vip.jr.jd.com/";
 }
 
 
-task.call=function(data){
-
-}
 
 //任务结束
 task.finish=function(){

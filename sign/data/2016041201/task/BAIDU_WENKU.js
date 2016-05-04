@@ -23,8 +23,9 @@ if(!CHIP_DATA[NAME]){
 
 
 var IFRAME = $("#iframe")[0];    
-/*JD任务，签到获取京豆
-**********************************************/
+
+
+
 function task(fun){
     console.log("[task start]****** name:"+NAME)
     task.end_cb = fun;
@@ -32,22 +33,19 @@ function task(fun){
         task.finish();
     }
     else{
-        task.open_wenku_baidu();
+        task.open_index();
     }
 }
 
 
 
 //打开文库首页
-task.open_wenku_baidu=function(){
-    console.log("[task.open_wenku_baidu")
+task.open_index=function(){
+    console.log("[task.open_index")
     IFRAME.src="http://wenku.baidu.com/";
 }
 
 
-task.call=function(data){
-
-}
 
 //任务结束
 task.finish=function(){

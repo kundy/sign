@@ -10,8 +10,8 @@ console.log("[LOAD data.js] 2016041201 ");
 
 
 //任务列表
-if(TASK_LIST)TASK_LIST = ["XUNLEI_DAKA"];
-//if(TASK_LIST)TASK_LIST = ['JD_JDOU','JD_CHOUMA','ETAO',"VIP_QQ","BAIDU_WENKU"];
+if(TASK_LIST)TASK_LIST = ["QQ_WALLET"];
+//if(TASK_LIST)TASK_LIST = ['JD_JDOU','JD_CHOUMA','ETAO',"VIP_QQ","BAIDU_WENKU","XUNLEI_DAKA","LIANTONG","XIAMI"];
 
 
 //页面嵌入脚本列表
@@ -37,6 +37,19 @@ if(URL_LIST)URL_LIST = [
     ["http://wenku.baidu.com/","baidu/wenku_baidu.js",1],
     ["http://wenku.baidu.com/task/browse/daily","baidu/task_browse_daily.js",1],
     ["http://wenku.baidu.com/user/mydocs","baidu/user_mydocs.js",1],
+
+    //迅雷打卡
+    ["http://vip.xunlei.com/index.html","xunlei.js",1],
+
+    //联通签到
+    ["http://iservice.10010.com/e3/signIn/index.html","liantong_10010.js",1],
+
+    //虾米签到
+    ["http://www.xiami.com/","xiami.js",1],
+    ["http://www.xiami.com/account","xiami.js",1],
+
+    //QQ钱包签到
+    ["http://www.xiami.com/account","xiami.js",1],
 ]
 
 
@@ -45,95 +58,281 @@ if(URL_LIST)URL_LIST = [
 //处理消息
 if(HANDLE_MSG)HANDLE_MSG = function(msg){
     // console.log(msg)
-    if(msg.type == "JD"){
-        if(msg.name == "chouma_num"){//筹码数量
-            CHIP_DATA["JD_CHOUMA"].num = msg.data;
-        }
-        else if(msg.name == "chouma_click"){//筹码按钮点击
-            CHIP_DATA["JD_CHOUMA"].today = 1;
-            CHIP_DATA["JD_CHOUMA"].task.finish();
-        }
-        else if(msg.name == "vip_jr_jd_click"){//今天签到成功
-            CHIP_DATA["JD_JDOU"].today = 1;
-            CHIP_DATA["JD_JDOU"].total++;
-            
-        }
-        else if(msg.name == "vip_jr_jd_clicked"){//今日已签到过
-            CHIP_DATA["JD_JDOU"].today = 1;
-        }
-        else if(msg.name == "user_name"){//用户名
-            CHIP_DATA["JD_JDOU"].auth = 1;
-            CHIP_DATA["JD_JDOU"].id = msg.data;
-            CHIP_DATA["JD_CHOUMA"].auth = 1;
-            CHIP_DATA["JD_CHOUMA"].id = msg.data;
-        }
-        else if(msg.name == "jd_num"){//京豆
-            CHIP_DATA["JD_JDOU"].num = msg.data;
-            CHIP_DATA["JD_JDOU"].task.finish();
-        }
+    switch(msg.type)
+    {
+
+        case "JD":
+            switch(msg.name)
+            {
+                case "chouma_num"://筹码数量
+                    CHIP_DATA["JD_CHOUMA"].num = msg.data;
+                    break;
+                case "chouma_click"://筹码按钮点击
+                    CHIP_DATA["JD_CHOUMA"].today = 1;
+                    CHIP_DATA["JD_CHOUMA"].task.finish();
+                    break;
+                case "vip_jr_jd_click"://今天签到成功
+                    CHIP_DATA["JD_JDOU"].today = 1;
+                    CHIP_DATA["JD_JDOU"].total++;
+                    break;
+                case "vip_jr_jd_clicked"://今日已签到过
+                    CHIP_DATA["JD_JDOU"].today = 1;
+                    break;
+                case "user_name"://用户名
+                    CHIP_DATA["JD_JDOU"].auth = 1;
+                    CHIP_DATA["JD_JDOU"].id = msg.data;
+                    CHIP_DATA["JD_CHOUMA"].auth = 1;
+                    CHIP_DATA["JD_CHOUMA"].id = msg.data;
+                    break;
+                case "jd_num"://京豆
+                    CHIP_DATA["JD_JDOU"].num = msg.data;
+                    CHIP_DATA["JD_JDOU"].task.finish();
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case "ETAO":
+            switch(msg.name)
+            {
+                case "login":
+                    if(msg.data==""){//未登录
+                        CHIP_DATA["ETAO"].auth = 0;
+                        CHIP_DATA["ETAO"].task.finish();
+                    }
+                    else{//已登录
+                        CHIP_DATA["ETAO"].auth = 1;
+                        CHIP_DATA["ETAO"].id = msg.data;
+                    }
+                    break;
+                case "sign_click"://签到成功
+                    CHIP_DATA["ETAO"].today=1;
+                    break;
+                case "coin_num"://淘金币数量
+                    CHIP_DATA["ETAO"].num = msg.data;
+                    CHIP_DATA["ETAO"].task.finish();
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case "VIP_QQ":
+            switch(msg.name)
+            {
+                case "user_name":
+                    if(msg.data==""){//未登录
+                        CHIP_DATA["VIP_QQ"].auth = 0;
+                        CHIP_DATA["VIP_QQ"].task.finish();
+                    }
+                    else{//已登录
+                        CHIP_DATA["VIP_QQ"].auth = 1;
+                        CHIP_DATA["VIP_QQ"].id = msg.data;
+                    }
+                    break;
+                case "sign_click"://签到成功
+                    CHIP_DATA["VIP_QQ"].today=1;
+                    break;
+                case "credit_num"://积分数量
+                    CHIP_DATA["VIP_QQ"].num = msg.data;
+                    CHIP_DATA["VIP_QQ"].task.finish();
+                    break;
+                default:
+                    break;
+            }
+            break;
+
+        case "BAIDU_WENKU":
+            switch(msg.name)
+            {
+                case "user_name":
+                    if(msg.data==""){//未登录
+                        CHIP_DATA["BAIDU_WENKU"].auth = 0;
+                        CHIP_DATA["BAIDU_WENKU"].task.finish();
+                    }
+                    else{//已登录
+                        CHIP_DATA["BAIDU_WENKU"].auth = 1;
+                        CHIP_DATA["BAIDU_WENKU"].id = msg.data;
+                    }
+                    break;
+                case "sign_click"://签到成功
+                    CHIP_DATA["BAIDU_WENKU"].today=1;
+                    break;
+                case "credit_num"://积分数量
+                    CHIP_DATA["BAIDU_WENKU"].num = msg.data;
+                    CHIP_DATA["BAIDU_WENKU"].task.finish();
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case "XUNLEI_DAKA":
+            switch(msg.name)
+            {
+                case "user_name":
+                    if(msg.data==""){//未登录
+                        CHIP_DATA["XUNLEI_DAKA"].auth = 0;
+                        CHIP_DATA["XUNLEI_DAKA"].task.finish();
+                    }
+                    else{//已登录
+                        CHIP_DATA["XUNLEI_DAKA"].auth = 1;
+                        CHIP_DATA["XUNLEI_DAKA"].id = msg.data;
+                    }
+                    break;
+                case "sign_click"://签到成功
+                    CHIP_DATA["XUNLEI_DAKA"].today=1;
+                    break;
+                case "credit_num"://积分数量
+                    CHIP_DATA["XUNLEI_DAKA"].num = msg.data;
+                    CHIP_DATA["XUNLEI_DAKA"].task.finish();
+                    break;
+                default:
+                    break;
+            }
+            break;
+
+        case "LIANTONG":
+            switch(msg.name)
+            {
+                case "user_name":
+                    if(msg.data==""){//未登录
+                        CHIP_DATA["LIANTONG"].auth = 0;
+                        CHIP_DATA["LIANTONG"].task.finish();
+                    }
+                    else{//已登录
+                        CHIP_DATA["LIANTONG"].auth = 1;
+                        CHIP_DATA["LIANTONG"].id = msg.data;
+                    }
+                    break;
+                case "sign_click"://签到成功
+                    CHIP_DATA["LIANTONG"].today=1;
+                    break;
+                case "credit_num"://积分数量
+                    CHIP_DATA["LIANTONG"].num = msg.data;
+                    CHIP_DATA["LIANTONG"].task.finish();
+                    break;
+                default:
+                    break;
+            }
+            break;
+
+        case "XIAMI":
+            switch(msg.name)
+            {
+                case "user_name":
+                    if(msg.data==""){//未登录
+                        CHIP_DATA["XIAMI"].auth = 0;
+                        CHIP_DATA["XIAMI"].task.finish();
+                    }
+                    else{//已登录
+                        CHIP_DATA["XIAMI"].auth = 1;
+                        CHIP_DATA["XIAMI"].id = msg.data;
+                    }
+                    break;
+                case "sign_click"://签到成功
+                    CHIP_DATA["XIAMI"].today=1;
+                    break;
+                case "credit_num"://积分数量
+                    CHIP_DATA["XIAMI"].num = msg.data;
+                    CHIP_DATA["XIAMI"].task.finish();
+                    break;
+                default:
+                    break;
+            }
+            break;
+                
+        default:
+            break;
     }
 
-    else if(msg.type == "ETAO"){
-        if(msg.name == "login"){
-            if(msg.data==""){//未登录
-                CHIP_DATA["ETAO"].auth = 0;
-                CHIP_DATA["ETAO"].task.finish();
-            }
-            else{//已登录
-                CHIP_DATA["ETAO"].auth = 1;
-                CHIP_DATA["ETAO"].id = msg.data;
-            }
+    // if(msg.type == "JD"){
+    //     if(msg.name == "chouma_num"){//筹码数量
+    //         CHIP_DATA["JD_CHOUMA"].num = msg.data;
+    //     }
+    //     else if(msg.name == "chouma_click"){//筹码按钮点击
+    //         CHIP_DATA["JD_CHOUMA"].today = 1;
+    //         CHIP_DATA["JD_CHOUMA"].task.finish();
+    //     }
+    //     else if(msg.name == "vip_jr_jd_click"){//今天签到成功
+    //         CHIP_DATA["JD_JDOU"].today = 1;
+    //         CHIP_DATA["JD_JDOU"].total++;
             
-        }
-        else if(msg.name == "sign_click"){//签到成功
-            CHIP_DATA["ETAO"].today=1;
-        }
-        else if(msg.name == "coin_num"){//淘金币数量
-            CHIP_DATA["ETAO"].num = msg.data;
-            CHIP_DATA["ETAO"].task.finish();
-        }
-    }
+    //     }
+    //     else if(msg.name == "vip_jr_jd_clicked"){//今日已签到过
+    //         CHIP_DATA["JD_JDOU"].today = 1;
+    //     }
+    //     else if(msg.name == "user_name"){//用户名
+    //         CHIP_DATA["JD_JDOU"].auth = 1;
+    //         CHIP_DATA["JD_JDOU"].id = msg.data;
+    //         CHIP_DATA["JD_CHOUMA"].auth = 1;
+    //         CHIP_DATA["JD_CHOUMA"].id = msg.data;
+    //     }
+    //     else if(msg.name == "jd_num"){//京豆
+    //         CHIP_DATA["JD_JDOU"].num = msg.data;
+    //         CHIP_DATA["JD_JDOU"].task.finish();
+    //     }
+    // }
 
-    else if(msg.type == "VIP_QQ"){
-        if(msg.name == "user_name"){
-            if(msg.data==""){//未登录
-                CHIP_DATA["VIP_QQ"].auth = 0;
-                CHIP_DATA["VIP_QQ"].task.finish();
-            }
-            else{//已登录
-                CHIP_DATA["VIP_QQ"].auth = 1;
-                CHIP_DATA["VIP_QQ"].id = msg.data;
-            }
+    // else if(msg.type == "ETAO"){
+    //     if(msg.name == "login"){
+    //         if(msg.data==""){//未登录
+    //             CHIP_DATA["ETAO"].auth = 0;
+    //             CHIP_DATA["ETAO"].task.finish();
+    //         }
+    //         else{//已登录
+    //             CHIP_DATA["ETAO"].auth = 1;
+    //             CHIP_DATA["ETAO"].id = msg.data;
+    //         }
             
-        }
-        else if(msg.name == "sign_click"){//签到成功
-            CHIP_DATA["VIP_QQ"].today=1;
-        }
-        else if(msg.name == "credit_num"){//淘金币数量
-            CHIP_DATA["VIP_QQ"].num = msg.data;
-            CHIP_DATA["VIP_QQ"].task.finish();
-        }
-    }
+    //     }
+    //     else if(msg.name == "sign_click"){//签到成功
+    //         CHIP_DATA["ETAO"].today=1;
+    //     }
+    //     else if(msg.name == "coin_num"){//淘金币数量
+    //         CHIP_DATA["ETAO"].num = msg.data;
+    //         CHIP_DATA["ETAO"].task.finish();
+    //     }
+    // }
 
-    else if(msg.type == "BAIDU_WENKU"){
-        if(msg.name == "user_name"){
-            if(msg.data==""){//未登录
-                CHIP_DATA["BAIDU_WENKU"].auth = 0;
-                CHIP_DATA["BAIDU_WENKU"].task.finish();
-            }
-            else{//已登录
-                CHIP_DATA["BAIDU_WENKU"].auth = 1;
-                CHIP_DATA["BAIDU_WENKU"].id = msg.data;
-            }
+    // else if(msg.type == "VIP_QQ"){
+    //     if(msg.name == "user_name"){
+    //         if(msg.data==""){//未登录
+    //             CHIP_DATA["VIP_QQ"].auth = 0;
+    //             CHIP_DATA["VIP_QQ"].task.finish();
+    //         }
+    //         else{//已登录
+    //             CHIP_DATA["VIP_QQ"].auth = 1;
+    //             CHIP_DATA["VIP_QQ"].id = msg.data;
+    //         }
             
-        }
-        else if(msg.name == "sign_click"){//签到成功
-            CHIP_DATA["BAIDU_WENKU"].today=1;
-        }
-        else if(msg.name == "credit_num"){//淘金币数量
-            CHIP_DATA["BAIDU_WENKU"].num = msg.data;
-            CHIP_DATA["BAIDU_WENKU"].task.finish();
-        }
-    }
+    //     }
+    //     else if(msg.name == "sign_click"){//签到成功
+    //         CHIP_DATA["VIP_QQ"].today=1;
+    //     }
+    //     else if(msg.name == "credit_num"){//淘金币数量
+    //         CHIP_DATA["VIP_QQ"].num = msg.data;
+    //         CHIP_DATA["VIP_QQ"].task.finish();
+    //     }
+    // }
+
+    // else if(msg.type == "BAIDU_WENKU"){
+    //     if(msg.name == "user_name"){
+    //         if(msg.data==""){//未登录
+    //             CHIP_DATA["BAIDU_WENKU"].auth = 0;
+    //             CHIP_DATA["BAIDU_WENKU"].task.finish();
+    //         }
+    //         else{//已登录
+    //             CHIP_DATA["BAIDU_WENKU"].auth = 1;
+    //             CHIP_DATA["BAIDU_WENKU"].id = msg.data;
+    //         }
+            
+    //     }
+    //     else if(msg.name == "sign_click"){//签到成功
+    //         CHIP_DATA["BAIDU_WENKU"].today=1;
+    //     }
+    //     else if(msg.name == "credit_num"){//淘金币数量
+    //         CHIP_DATA["BAIDU_WENKU"].num = msg.data;
+    //         CHIP_DATA["BAIDU_WENKU"].task.finish();
+    //     }
+    // }
 
 }

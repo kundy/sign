@@ -28,8 +28,7 @@ var IFRAME = $("#iframe")[0];
 
 
 
-/*一淘 淘金币任务
-**********************************************/
+
 function task(fun){
     console.log("[task start]****** name:"+NAME)
     task.end_cb = fun;
@@ -38,12 +37,12 @@ function task(fun){
         task.finish();
     }
     else{
-        task.step_check_login();
+        task.open_index();
     }
 
 }
 //检查登录
-task.step_check_login=function(){
+task.open_index=function(){
     console.log("[task.step_check_login]")
      //先检查登录态是否正常
     IFRAME.src="http://www.etao.com/";
