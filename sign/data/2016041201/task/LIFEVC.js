@@ -2,18 +2,18 @@
 
 
 //初始定义
-var NAME='QQ_WALLET';
+var NAME='PINGAN';
 if(!CHIP_DATA[NAME]){
     CHIP_DATA[NAME]={
-        name:"QQ-钱包",
-        remark:"QQ钱包签可以加速QQ成长，或者兑换流量包",
-        remarkUrl:"http://imgcache.qq.com/channel/wallet/activity/task.html",
+        name:"LIFE-VC",
+        remark:"在LIFE-VC签到，可以领取20积分，200积分可抵1元",
+        remarkUrl:"http://www.lifevc.com/Home/PointsSystem",
         id:"",
-        idUrl:"http://vip.qq.com/my/index.html",
+        idUrl:"https://account.lifevc.com/UserCenter",
         auth:-1,//是否登录
         today:0,//今天是否抢
         num:-1,//当前筹码数量
-        numUrl:"http://www.xiami.com/account",
+        numUrl:"http://account.lifevc.com/UserCenter/MemberContent?type=signin&caller=Home",
         total:0,//领取的累积数量
         status:1,
         task:{}
@@ -42,7 +42,7 @@ function task(fun){
 //打开用户个人中心页
 task.open_index=function(){
     console.log("[task.open_index")
-    IFRAME.src="http://www.xiami.com/";
+    IFRAME.src="http://www.lifevc.com/";
 }
 
 

@@ -10,8 +10,8 @@ console.log("[LOAD data.js] 2016041201 ");
 
 
 //任务列表
-if(TASK_LIST)TASK_LIST = ["QQ_WALLET"];
-//if(TASK_LIST)TASK_LIST = ['JD_JDOU','JD_CHOUMA','ETAO',"VIP_QQ","BAIDU_WENKU","XUNLEI_DAKA","LIANTONG","XIAMI"];
+if(TASK_LIST)TASK_LIST = ["LIFEVC"];
+//if(TASK_LIST)TASK_LIST = ['JD_JDOU','JD_CHOUMA','ETAO',"VIP_QQ","BAIDU_WENKU","XUNLEI_DAKA","LIANTONG","XIAMI","PINGAN"];
 
 
 //页面嵌入脚本列表
@@ -50,6 +50,12 @@ if(URL_LIST)URL_LIST = [
 
     //QQ钱包签到
     ["http://www.xiami.com/account","xiami.js",1],
+
+    //平安签到
+    ["http://events.pingan.com/qiandao/index.html","pingan.js",1],
+
+    //lifeVC
+    ["http://www.lifevc.com/","lifevc.js",1],
 ]
 
 
@@ -234,6 +240,30 @@ if(HANDLE_MSG)HANDLE_MSG = function(msg){
                 case "credit_num"://积分数量
                     CHIP_DATA["XIAMI"].num = msg.data;
                     CHIP_DATA["XIAMI"].task.finish();
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case "PINGAN":
+            switch(msg.name)
+            {
+                case "user_name":
+                    if(msg.data==""){//未登录
+                        CHIP_DATA["PINGAN"].auth = 0;
+                        CHIP_DATA["PINGAN"].task.finish();
+                    }
+                    else{//已登录
+                        CHIP_DATA["PINGAN"].auth = 1;
+                        CHIP_DATA["PINGAN"].id = msg.data;
+                    }
+                    break;
+                case "sign_click"://签到成功
+                    CHIP_DATA["PINGAN"].today=1;
+                    break;
+                case "credit_num"://积分数量
+                    CHIP_DATA["PINGAN"].num = msg.data;
+                    CHIP_DATA["PINGAN"].task.finish();
                     break;
                 default:
                     break;
