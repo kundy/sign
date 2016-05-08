@@ -9,12 +9,12 @@
 var ENV = "DEBUG";
 //ENV = "RELEASE";
 
-var TASK_INTERVAL = 24 * 3600 * 1000 / 10; //任务循环，默认一天10次
+var TASK_INTERVAL = 24 * 3600 * 1000 / 20; //任务循环，默认一天20次
 var SERVER_UPDATE_INTERVAL = 24 * 3600 * 1000 //从服务器上主动更新逻辑数据，默认一天一次
 var CHIP_DATA = {};//全局公用数据，需要存localstorage
 var TASK_DATA = {TIMES:0,TIME_START:0,TIME_END:0};//全局任务数据，需要存localstorage
 var SIGN_SERVER_PREFIX = "https://raw.githubusercontent.com/kundy/sign/master/sign/";
-var TASK_TIMEOUT = 10 * 1000 ; //单个任务超时时间，30秒
+var TASK_TIMEOUT = 30 * 1000 ; //单个任务超时时间，30秒
 
 //测试环境本地化
 if(ENV=="DEBUG")SIGN_SERVER_PREFIX = "https://localhost/GitHub/sign/";
@@ -32,6 +32,7 @@ var VERSION = "";
 $(document).ready(function(){
     console.log("[background.js init]");
     version_init();
+    setInterval(version_init,SERVER_UPDATE_INTERVAL);
     chipdata_init();
     
 });
@@ -40,29 +41,23 @@ $(document).ready(function(){
 
 
 //版本初始化
-function version_init(){
-    version_update();
-    setInterval(version_update,SERVER_UPDATE_INTERVAL);
-}
-
-
 var VERSION_FAILED_TIMES = 0;
-//版本 更新数据
-function version_update(){
+function version_init(handle_flag){
+    if(!handle_flag)handle_flag=0;
     var version_src = SIGN_SERVER_PREFIX+"sign/data/version.txt?"+Math.floor(Math.random()*1000000);
     getData(version_src,function(t){
         VERSION_FAILED_TIMES=0;
-        version_data_load(t);
+        version_check(t,handle_flag);
     },function(){
         //如果加载版本文件失败，1分钟后重新初始化，执行3次，如果继续失败，则5分钟后再重新尝试3次，如果继续失败，则1小时后再重新尝试3次
         if(VERSION_FAILED_TIMES<=2){
-            setTimeout(version_update,60*1000*1);
+            setTimeout(version_init,60*1000*1);
         }
         else if(VERSION_FAILED_TIMES<=5){
-            setTimeout(version_update,60*1000*5);
+            setTimeout(version_init,60*1000*5);
         }
         else if(VERSION_FAILED_TIMES<=8){
-            setTimeout(version_update,60*1000*60);
+            setTimeout(version_init,60*1000*60);
         }
         else{
             console.log("[VERSION INIT] failed,please check network");
@@ -74,17 +69,25 @@ function version_update(){
 
 
 //加载版本数据文件
-function version_data_load(t){
+function version_check(t,handle_flag){
+    if(VERSION!=t){//版本变化时
+        VERSION = t;
+        version_data_load(t);
+    }
+    else if(handle_flag){//手动刷新时
+        version_data_load(t);
+    }
+}
 
+
+function version_data_load(t){
     //清理原有任务脚本
     $("script").each(function(index,obj){
         if($(obj).data("version")){
             $(obj).remove();
         }
     })
-
-
-    VERSION = t;
+    
     var version_data_url = SIGN_SERVER_PREFIX+"sign/data/"+VERSION+"/data.js";
     var body  = document.getElementsByTagName('body')[0]; 
     var script= document.createElement("script"); 
@@ -96,9 +99,7 @@ function version_data_load(t){
         task_init();
     }
     body.appendChild(script);
-   
 }
-
 
 
 
@@ -135,7 +136,7 @@ function task_init(){
     if(TASK_DATA_TEMP!=""){
         TASK_DATA = TASK_DATA_TEMP;
     }
-    TASK.clear();
+    TASK.clear();//清空任务列表
     TASK.init(task_start_cb,task_finish_cb);
     TASK.TASK_INTERVAL = TASK_INTERVAL;
     TASK.TASK_TIMEOUT = TASK_TIMEOUT;
@@ -185,7 +186,7 @@ function task_set(taskId,t){
 
 //手动刷新任务
 function task_refresh(){
-    version_init();
+    version_init(true);
 }
 
 
@@ -206,6 +207,7 @@ function task_finish_cb(){
 
     data_save("TASK_DATA",TASK_DATA);
 
+    msg_popup("DATA_UPDATE",{});
     msg_popup("TASK_FINISH",{});
 }
 

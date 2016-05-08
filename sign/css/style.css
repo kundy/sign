@@ -35,7 +35,7 @@ body{width:420px;min-height:352px;overflow:hidden;padding-top:15px;}
 .container .chip-list{width:440px;overflow: hidden;}
 
 
-.container .labeled{width:180px;margin-bottom:10px;}
+.container .labeled{width:190px;margin-bottom:10px;position: relative;}
 
 
 
@@ -68,3 +68,6 @@ body{width:420px;min-height:352px;overflow:hidden;padding-top:15px;}
 .chip-task .sign-last{display:inline-block;margin-left:10px;}
 .chip-task .refresh{display:inline-block;margin-left:10px;}
 
+.chip-list .ui.labeled.button>.button{min-width:130px;    padding: .78571429em 0em;text-align: left;padding-left:36px;}
+.chip-list .ui.labeled.button>.label{min-width:45px;}
+.chip-list .ui.button>.icon:not(.button){position:absolute;left:12px;top:10px;}

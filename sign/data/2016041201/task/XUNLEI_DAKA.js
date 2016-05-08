@@ -16,6 +16,7 @@ if(!CHIP_DATA[NAME]){
         numUrl:"http://vip.xunlei.com/index.html",
         total:0,//领取的累积数量
         status:1,
+        visable:1,
         task:{}
     }
 }

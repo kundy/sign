@@ -63,6 +63,7 @@ TASK.loop=function()
         //设置超时间
         if(TASK_TIMEOUT_ID)clearTimeout(TASK_TIMEOUT_ID);
         TASK_TIMEOUT_ID = setTimeout(function(){//任务超时
+            console.log("task timeout")
             TASK.list[TASK.TASK_INDEX].end_cb();
         },TASK.TASK_TIMEOUT)
     }

@@ -213,7 +213,7 @@ function msg_background(_cmd,_cb){
 
 //响应消息
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-	console.log(message);
+	//console.log(message);
     if(message == 'DATA_UPDATE'){
     	dataUpdate();
     }

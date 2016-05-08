@@ -16,6 +16,7 @@ if(!CHIP_DATA[NAME]){
         numUrl:"http://iservice.10010.com/e3/signIn/index.html",
         total:0,//领取的累积数量
         status:1,
+        visable:1,
         task:{}
     }
 }

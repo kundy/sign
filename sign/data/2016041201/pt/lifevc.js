@@ -14,7 +14,7 @@ var GET_CHIP_FLAG = 0;//防止重复加载引起多次运行
 if(GET_CHIP_FLAG==1)return;
 GET_CHIP_FLAG=1;
 
-setTimeout(init,2000);
+setTimeout(init,1000);
 
 
 
@@ -28,9 +28,15 @@ function init(){
 
 function url_switch(){
 	var url = location.href;
-	console.log(url)
-	if(url == "http://events.pingan.com/qiandao/index.html"){
+	//console.log(url)
+	if(url == "http://www.lifevc.com/"){
 		get_user_name();
+	}
+	else if(url.indexOf("http://account.lifevc.com/UserCenter/MemberContent?type=signin&caller=Home")>-1){
+		click_sign();
+	}
+	else if(url.indexOf("https://account.lifevc.com/UserCenter/MemberContent?type=integral&caller=Home")>-1){
+		get_credit();
 	}
 }
 
@@ -41,27 +47,39 @@ function get_user_name(){
 	//获取用户名
 	var user_name ="";
 	var msg;
-    if(document.querySelectorAll("#header .party_no").length>0){
-        user_name=document.querySelectorAll("#header .party_no")[0].innerText;
+	var lvguin = getCookie("lvguin")
+	if(lvguin!=""){
+		user_name=lvguin;
+		setTimeout(open_sign_page,500);
+	}
 
-        if(user_name!="")click_sign();
-
-    }
-    console.log(user_name)
-    msg = {type:"PINGAN",name:"user_name",data:user_name};
+    msg = {type:"LIFEVC",name:"user_name",data:user_name};
     post_parent(msg);
 }
 
+
+
+function open_sign_page(){
+	location.href="http://account.lifevc.com/UserCenter/MemberContent?type=signin&caller=Home"
+}
+
+function open_credit_page(){
+	location.href="https://account.lifevc.com/UserCenter/MemberContent?type=integral&caller=Home"
+}
+
+
+
+
 //点击签到
 function click_sign(){
-	if(document.querySelectorAll(".index_sign_btn").length>0){
-		click_btn(document.querySelectorAll(".index_sign_btn")[0])
+	if(document.querySelectorAll(".signbt").length>0){
+		click_btn(document.querySelectorAll(".signbt")[0])
 
 		
-		var msg = {type:"PINGAN",name:"sign_click",data:""};
+		var msg = {type:"LIFEVC",name:"sign_click",data:""};
     	post_parent(msg);
 
-    	setTimeout(get_credit,1500);
+    	setTimeout(open_credit_page,1500);
 
 	}
 }
@@ -71,11 +89,10 @@ function click_sign(){
 function get_credit(){
 	var num = 0;
 
-	if(document.querySelectorAll("#sign-tip span").length>0)
-		num = document.querySelectorAll("#sign-tip span")[0].innerText.replace("天","");
-
+	if(document.querySelectorAll(".uspop_integral_currSituation span").length>0)
+		num = document.querySelectorAll(".uspop_integral_currSituation span")[0].innerText;
 	//通知父页面
-	var msg = {type:"PINGAN",name:"credit_num",data:num};
+	var msg = {type:"LIFEVC",name:"credit_num",data:num};
 	post_parent(msg);
 }
 
@@ -93,6 +110,15 @@ function post_parent(msg){
 	window.parent.postMessage(str,'*');
 }
 
+
+function getCookie(name)
+{
+	var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+	if(arr=document.cookie.match(reg))
+		return unescape(arr[2]);
+	else
+		return "";
+}
 
 
 })();

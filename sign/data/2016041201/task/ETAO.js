@@ -15,7 +15,9 @@ if(!CHIP_DATA[NAME]){
         num:-1,//当前筹码数量
         numUrl:"https://taojinbi.taobao.com/coin/userCoinDetail.htm",
         total:0,//领取的累积数量
-        status:1
+        visable:1,
+        status:1,
+        task:{}
     }
 }
 

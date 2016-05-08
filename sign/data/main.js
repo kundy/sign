@@ -3,7 +3,7 @@
 (function(){
 
 
-console.log("[CONTENT-SCRIPT] START");
+//console.log("[CONTENT-SCRIPT] START url:"+location.href);
 
 
 
@@ -18,10 +18,10 @@ function insert_script(js){
 		script.type = "text/javascript"; 
 		script.src= js; 
 		body.appendChild(script);
-		console.log("[CONTENT-SCRIPT insert_script] DONE")
+		//console.log("[CONTENT-SCRIPT insert_script] DONE")
 	}
 	else{
-		console.log("[CONTENT-SCRIPT insert_script] FAIL")
+		//console.log("[CONTENT-SCRIPT insert_script] FAIL")
 	}
 }
 
@@ -52,7 +52,7 @@ window.addEventListener('message',function(e){
             handle_msg(msg);
         }
     }catch(error){
-        console.log("receive error message")
+        //console.log("receive error message")
     }
 },false);
 

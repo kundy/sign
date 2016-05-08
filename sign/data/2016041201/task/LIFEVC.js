@@ -2,7 +2,7 @@
 
 
 //初始定义
-var NAME='PINGAN';
+var NAME='LIFEVC';
 if(!CHIP_DATA[NAME]){
     CHIP_DATA[NAME]={
         name:"LIFE-VC",
@@ -16,6 +16,7 @@ if(!CHIP_DATA[NAME]){
         numUrl:"http://account.lifevc.com/UserCenter/MemberContent?type=signin&caller=Home",
         total:0,//领取的累积数量
         status:1,
+        visable:1,
         task:{}
     }
 }
@@ -41,7 +42,7 @@ function task(fun){
 
 //打开用户个人中心页
 task.open_index=function(){
-    console.log("[task.open_index")
+    console.log("[task.open_index]")
     IFRAME.src="http://www.lifevc.com/";
 }
 

@@ -11,7 +11,7 @@ console.log("[LOAD data.js] 2016041201 ");
 
 //任务列表
 if(TASK_LIST)TASK_LIST = ["LIFEVC"];
-//if(TASK_LIST)TASK_LIST = ['JD_JDOU','JD_CHOUMA','ETAO',"VIP_QQ","BAIDU_WENKU","XUNLEI_DAKA","LIANTONG","XIAMI","PINGAN"];
+if(TASK_LIST)TASK_LIST = ['JD_JDOU','JD_CHOUMA','ETAO',"VIP_QQ","BAIDU_WENKU","XUNLEI_DAKA","LIANTONG","XIAMI","LIFEVC",];
 
 
 //页面嵌入脚本列表
@@ -48,14 +48,13 @@ if(URL_LIST)URL_LIST = [
     ["http://www.xiami.com/","xiami.js",1],
     ["http://www.xiami.com/account","xiami.js",1],
 
-    //QQ钱包签到
-    ["http://www.xiami.com/account","xiami.js",1],
-
     //平安签到
     ["http://events.pingan.com/qiandao/index.html","pingan.js",1],
 
     //lifeVC
     ["http://www.lifevc.com/","lifevc.js",1],
+    ["http://account.lifevc.com/UserCenter/MemberContent?type=signin&caller=Home","lifevc.js",0],
+    ["https://account.lifevc.com/UserCenter/MemberContent?type=integral&caller=Home","lifevc.js",0],
 ]
 
 
@@ -63,7 +62,7 @@ if(URL_LIST)URL_LIST = [
 
 //处理消息
 if(HANDLE_MSG)HANDLE_MSG = function(msg){
-    // console.log(msg)
+    //console.log(msg)
     switch(msg.type)
     {
 
@@ -269,6 +268,32 @@ if(HANDLE_MSG)HANDLE_MSG = function(msg){
                     break;
             }
             break;
+
+         case "LIFEVC":
+            switch(msg.name)
+            {
+                case "user_name":
+                    if(msg.data==""){//未登录
+                        CHIP_DATA["LIFEVC"].auth = 0;
+                        CHIP_DATA["LIFEVC"].task.finish();
+                    }
+                    else{//已登录
+                        CHIP_DATA["LIFEVC"].auth = 1;
+                        CHIP_DATA["LIFEVC"].id = msg.data;
+                    }
+                    break;
+                case "sign_click"://签到成功
+                    CHIP_DATA["LIFEVC"].today=1;
+                    break;
+                case "credit_num"://积分数量
+                    CHIP_DATA["LIFEVC"].num = msg.data;
+                    CHIP_DATA["LIFEVC"].task.finish();
+                    break;
+                default:
+                    break;
+            }
+            break;
+
                 
         default:
             break;

@@ -28,6 +28,7 @@ function init(){
 
 function url_switch(){
 	var url = location.href;
+	//console.log("url:"+url)
 	if(url == "http://www.xiami.com/"){
 		get_user_name();
 	}
