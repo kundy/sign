@@ -1,7 +1,8 @@
 {
    "name": "天天签到",
+   "short_name": "sign",
    "default_locale": "zh_CN",
-   "version":"1.0",
+   "version":"1.0.1",
    "icons": {
       "19": "icons/logo_19.png",
       "48": "icons/logo_48.png",
@@ -15,7 +16,7 @@
        "default_popup": "popup.html"
 
    },
-    "description": "每天自动在各平台签到，获取淘金币、京豆、筹码、下载券等，积少成多实时掌控",
+    "description": "每天自动在各平台签到，获取淘金币、京豆、筹码、下载券等，积少成多。",
     "manifest_version": 2,
 
     "content_scripts": [
