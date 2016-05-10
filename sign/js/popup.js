@@ -24,7 +24,6 @@ function init(){
 
 		});
  	});
- 	// $('.ui.checkbox').checkbox('check');
  	$('.ui.checkbox').checkbox({
 		onChecked: function() {
 			console.log("onChecked")
@@ -35,6 +34,17 @@ function init(){
 			task_set($(".popup").attr("data-item"),0)
 		}
 	});
+
+	$(".container").click(function(event){
+		$(".popup").hide();
+		event.stopPropagation();
+	})
+
+	$(".popup").click(function(event){
+		event.stopPropagation();
+	})
+
+
  	dataUpdate();
  }
 
@@ -104,20 +114,38 @@ function pageRefresh(){
 				themeColor="grey"
 				iconStyle="coffee";
 			}
-			else if(CHIP_DATA[item].auth!=1){//未登录
-				themeColor="red"
-				iconStyle="warning sign";
-			}
 			else{
-				if(CHIP_DATA[item].today===0){//今天还未签到
+				
+				if(CHIP_DATA[item].step==1){//准备
 					themeColor="teal"
 					iconStyle="wait";
 				}
-				else{//今天已签到
-					themeColor="green"
-					iconStyle="checkmark";
+				else if(CHIP_DATA[item].step==2){//进行中
+					themeColor="yellow"
+					iconStyle="spinner";
+				}
+				else if(CHIP_DATA[item].step==3){//完成
+					if(CHIP_DATA[item].auth!=1){//未登录
+						themeColor="red"
+						iconStyle="warning sign";
+					}
+					else{
+						if(CHIP_DATA[item].today===0){//今天还未签到
+							themeColor="pink"
+							iconStyle="wait";
+						}
+						else{//今天已签到
+							themeColor="green"
+							iconStyle="checkmark";
+						}
+					}
 				}
 			}
+
+
+
+
+			
 
 
 			html+='<div class="ui labeled button item" data-item="'+item+'">';
@@ -137,7 +165,7 @@ function pageRefresh(){
 	$(".chip-list").html(html);
 
 	
-	$('.chip-list .item').unbind("click").click(function(){
+	$('.chip-list .item').unbind("click").bind("click",function(event){
 		var item = $(this).data("item");
 
 		//数量
@@ -171,13 +199,25 @@ function pageRefresh(){
 		$(".popup .remark").attr("href",CHIP_DATA[item].remarkUrl);
 		$(".popup .id a").attr("href",CHIP_DATA[item].idUrl);
 		$(".popup .num a").attr("href",CHIP_DATA[item].numUrl);
-	});
 
-	$('.chip-list .item').popup({
-		popup : $('.popup'),
-		position : 'bottom center',
-		on    : 'click'
+
+		var _left = $(this)[0].offsetLeft
+		var _top = $(this)[0].offsetTop+30
+		if(_left>350)_left=_left-130;
+		else if(_left>200)_left=_left-80;
+		$(".popup").css({"top":_top,"left":_left}).show();
+
+		 event.stopPropagation();    //  阻止事件冒泡
 	});
+	
+
+	// $('.chip-list .item').popup({
+	// 	popup : $('.popup'),
+	// 	position : 'bottom center',
+	// 	on    : 'click'
+	// });
+
+
 
 }
 

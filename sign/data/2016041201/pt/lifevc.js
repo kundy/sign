@@ -42,6 +42,7 @@ function url_switch(){
 
 
 
+
 function get_user_name(){
 
 	//获取用户名
@@ -119,6 +120,43 @@ function getCookie(name)
 	else
 		return "";
 }
+
+
+
+
+//测试url是否跳转，主要用来验证是否登录成功
+function checkUrlredirect(url,cb)
+{
+
+    var xhr = new XMLHttpRequest();    
+    xhr.open("get", url, true);
+    xhr.responseType = "blob";
+    xhr.timeout = 30*1000;
+    // xhr.setRequestHeader("User-Agent","Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)");
+
+    xhr.onload = function() {
+        if (xhr.status == 200 ) {
+            if(url == xhr.responseURL){
+                cb(1);
+            }
+            else{
+                cb(0);
+            }
+        }
+        else{
+            // console.warn("Download.fail i:"+ i +　" blobURL:" +blobURL);
+            // Download.fail(i);
+        }
+    }
+    xhr.ontimeout  = function(event){
+        // console.warn("Download.timeout i:"+ i +　" blobURL:" +blobURL);
+　　}
+    xhr.onerror = function(e) {
+        // console.warn("Download.error i:"+ i +　" blobURL:" +blobURL);
+      };
+    xhr.send();
+}
+
 
 
 })();

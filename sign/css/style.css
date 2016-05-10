@@ -29,15 +29,19 @@ a div,a strong, a span, a i,a s{#cursor: hand}
 
 
 
-body{width:420px;min-height:352px;overflow:hidden;padding-top:15px;}
+body{width:600px;min-height:420px;overflow:hidden;padding-top:15px;background:#eee;}
 .container{padding-top:1em;padding-bottom:200px;}
 
-.container .chip-list{width:440px;overflow: hidden;}
+.container .chip-list{width:650px;overflow: hidden;}
 
 
 .container .labeled{width:190px;margin-bottom:10px;position: relative;}
 
-
+.container h3.head{font-size:24px;padding-bottom:10px;}
+.container h3.head a.title{text-shadow:1px 1px 3px rgba(102,217,177,1);}
+.container h3.head a.title:hover{text-decoration: none;}
+.container h3.head a.help{font-size:12px;color:#aaa;font-weight: 100;}
+.container h3.head .version{font-size:16px;font-weight: 100;margin-top:10px;}
 
 
 .ui .icon {

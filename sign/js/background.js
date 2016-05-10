@@ -7,13 +7,13 @@
 
 
 var ENV = "DEBUG";
-//ENV = "RELEASE";
+ENV = "RELEASE";
 
 var TASK_INTERVAL = 24 * 3600 * 1000 / 20; //任务循环，默认一天20次
 var SERVER_UPDATE_INTERVAL = 24 * 3600 * 1000 //从服务器上主动更新逻辑数据，默认一天一次
 var CHIP_DATA = {};//全局公用数据，需要存localstorage
 var TASK_DATA = {TIMES:0,TIME_START:0,TIME_END:0};//全局任务数据，需要存localstorage
-var SIGN_SERVER_PREFIX = "https://raw.githubusercontent.com/kundy/sign/master/sign/";
+var SIGN_SERVER_PREFIX = "https://rawgit.com/kundy/sign/master/";
 var TASK_TIMEOUT = 30 * 1000 ; //单个任务超时时间，30秒
 
 //测试环境本地化
@@ -70,11 +70,12 @@ function version_init(handle_flag){
 
 //加载版本数据文件
 function version_check(t,handle_flag){
-    if(VERSION!=t){//版本变化时
+    if(handle_flag){//手动刷新时
         VERSION = t;
         version_data_load(t);
     }
-    else if(handle_flag){//手动刷新时
+    else if(VERSION!=t){//版本变化时
+        VERSION = t;
         version_data_load(t);
     }
 }
@@ -137,12 +138,16 @@ function task_init(){
         TASK_DATA = TASK_DATA_TEMP;
     }
     TASK.clear();//清空任务列表
-    TASK.init(task_start_cb,task_finish_cb);
+
+    //TASK对象初始化
+    TASK.init();
     TASK.TASK_INTERVAL = TASK_INTERVAL;
     TASK.TASK_TIMEOUT = TASK_TIMEOUT;
     TASK.TIMES = TASK_DATA.TIMES;//任务执行次数
     TASK.TIME_START = TASK_DATA.TIME_START;//任务开始时间
     TASK.TIME_END = TASK_DATA.TIME_END;//任务结束时间
+    TASK.START_CB = task_start_cb;//任务开始回调
+    TASK.END_CB = task_finish_cb;//任务完成回调
 
     task_reg();
 }
@@ -193,6 +198,13 @@ function task_refresh(){
 //一轮任务开始
 function task_start_cb(){
     msg_popup("TASK_START",{});
+
+    //重置所有可运行任务的step为1
+    for(var item in CHIP_DATA){
+        if(CHIP_DATA[item].status == 1 && CHIP_DATA[item].visable==1){
+            CHIP_DATA[item].step = 1;
+        }
+    }
 }
 
 

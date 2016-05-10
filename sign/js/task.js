@@ -11,16 +11,17 @@
 var TASK = function(){}
 var TASK_TIMEOUT_ID;
 TASK.list = [];
-TASK.init=function(start_cb,end_cb)
+TASK.init=function()
 {
     TASK.TIMES = 0;//任务执行次数
     TASK.TIME_START = 0;//任务开始时间
     TASK.TIME_END = 0;//任务结束时间
     TASK.TASK_INDEX = 0;//任务序号
     TASK.RUN_FLAG = 0;//任务是否正常执行
-    TASK.START_CB = start_cb;//任务开始回调
-    TASK.END_CB = end_cb;//任务完成回调
+    TASK.START_CB = {};//任务开始回调
+    TASK.END_CB = {};//任务完成回调
 }
+
 TASK.start=function()
 {
     console.log("TASK.start")
@@ -52,7 +53,7 @@ TASK.loop=function()
     }
     else{
 
-        TASK.list[TASK.TASK_INDEX](function(){//执行任务 ，参数为回调
+        TASK.list[TASK.TASK_INDEX](function(){//此处参数：为单个任务的回调，用于endcb,方便单个任务主动触发结束
             setTimeout(function(){//此处注意要异步延迟执行,防止过早回调直接进入下一个任务
                 if(TASK_TIMEOUT_ID)clearTimeout(TASK_TIMEOUT_ID);
                 TASK.TASK_INDEX++;
@@ -64,6 +65,7 @@ TASK.loop=function()
         if(TASK_TIMEOUT_ID)clearTimeout(TASK_TIMEOUT_ID);
         TASK_TIMEOUT_ID = setTimeout(function(){//任务超时
             console.log("task timeout")
+            TASK.list[TASK.TASK_INDEX].timeout();
             TASK.list[TASK.TASK_INDEX].end_cb();
         },TASK.TASK_TIMEOUT)
     }

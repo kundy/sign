@@ -17,6 +17,7 @@ if(!CHIP_DATA[NAME]){
         total:0,//领取的累积数量
         visable:1,
         status:1,
+        step:0,//状态：0初始值  1准备 2任务进行中 3完成
         task:{}
     }
 }
@@ -27,22 +28,38 @@ var IFRAME = $("#iframe")[0];
 
 
 
-
-
-
-
 function task(fun){
     console.log("[task start]****** name:"+NAME)
     task.end_cb = fun;
+    task.start();
 
+}
+
+//任务开始
+task.start=function(){
+    console.log("[task.start]***")
     if(CHIP_DATA[NAME].status == 0){
         task.finish();
     }
     else{
+        CHIP_DATA[NAME].step = 2;
         task.open_index();
     }
-
 }
+
+//任务超时
+task.timeout=function(){
+    CHIP_DATA[NAME].step = 3;
+}
+
+//任务结束
+task.finish=function(){
+    console.log("[task.finish]***")
+    IFRAME.src = "";
+    CHIP_DATA[NAME].step = 3;
+    task.end_cb();
+}
+
 //检查登录
 task.open_index=function(){
     console.log("[task.step_check_login]")
@@ -50,12 +67,6 @@ task.open_index=function(){
     IFRAME.src="http://www.etao.com/";
 }
 
-//任务结束
-task.finish=function(){
-    console.log("[task.finish]***")
-    IFRAME.src = "";
-    task.end_cb();
-}
 
 
 
